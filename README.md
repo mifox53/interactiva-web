@@ -28,6 +28,13 @@ Los archivos `_plantilla.md` son modelos para copiar; no se publican.
 - Una noticia o evento con `borrador: true` no aparece en el sitio. Se publica al cambiarlo a `false`.
 - Lo pagado lleva `patrocinado: true` y sale con la etiqueta "Patrocinado".
 
+## Artistas en la portada
+
+La portada muestra 4 artistas. Si hay más de 4 artistas con foto, cada día salen 4 distintos
+elegidos al azar (los mismos para todos los visitantes ese día). Para agregar uno: una foto en
+`public/img/artistas/` y un archivo `.md` en `src/contenido/artistas/` con `nombre`, `foto` y `saludo`.
+Para ver cómo saldrá otro día: `interactiva.com.ve/?fecha=2026-12-25`.
+
 ## Patrocinantes
 
 Cada patrocinante tiene:
