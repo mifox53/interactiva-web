@@ -1,0 +1,25 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { fechaLarga, NOMBRES_CATEGORIA } from '../../lib/util.js';
+
+export async function getStaticPaths() {
+  const noticias = await getCollection('noticias', (n) => !n.data.borrador);
+  return noticias.map((noticia) => ({ params: { id: noticia.id }, props: { noticia } }));
+}
+const { noticia } = Astro.props;
+const d = noticia.data;
+const { Content } = await render(noticia);
+---
+<Base titulo={d.titulo} descripcion={d.resumen} imagen={d.imagen || undefined}>
+  <article class="wrap nota">
+    <span class="k">{NOMBRES_CATEGORIA[d.categoria]}</span>
+    <h1>{d.titulo}</h1>
+    <p class="meta">{fechaLarga(d.fecha)}</p>
+    {d.imagen && <div class="foto"><img src={d.imagen} alt="" /></div>}
+    {d.creditoImagen && <p class="credito">Foto: {d.creditoImagen}</p>}
+    <div class="cuerpo"><Content /></div>
+    <p class="fuente">Fuente: <a href={d.fuenteUrl} target="_blank" rel="noopener">{d.fuenteNombre}</a></p>
+    <a class="volver" href="/noticias/">← Más noticias</a>
+  </article>
+</Base>

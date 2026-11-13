@@ -1,0 +1,15 @@
+---
+// ÚNICO lugar donde se dibuja la marca. El archivo del logo y el nombre
+// salen de src/datos/sitio.json: se cambian allí y cambian en todo el sitio.
+import sitio from '../datos/sitio.json';
+const { tam = 46, conNombre = true } = Astro.props;
+---
+<a class="marca" href="/" aria-label={`${sitio.nombre}, inicio`}>
+  <img src={sitio.logo} alt="" width={tam} height={tam} />
+  {conNombre && (
+    <span class="marca-txt">
+      <strong>{sitio.nombre}</strong>
+      <small>{sitio.lema}</small>
+    </span>
+  )}
+</a>

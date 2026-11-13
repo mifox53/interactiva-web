@@ -1,0 +1,8 @@
+[
+  { "programa": "Cabina Caliente Interactiva", "detalle": "Tarde en vivo", "dias": "Diario", "hora": "5:00–7:00 PM" },
+  { "programa": "Retro Sonoro Mix", "detalle": "Los clásicos de siempre", "dias": "Vie–Sáb", "hora": "9:00–11:00 PM" },
+  { "programa": "Ladies Night Maratón", "detalle": "Maratón de la semana", "dias": "Jue–Sáb", "hora": "10:30 AM–12:00 PM" },
+  { "programa": "Rockero Bar", "detalle": "Para el domingo", "dias": "Dom", "hora": "9:00 AM–12:00 PM" },
+  { "programa": "Las Noticias que No Son Noticias", "detalle": "Rotativo", "dias": "Lun–Dom", "hora": "24/7" },
+  { "programa": "Noticias", "detalle": "Rotativo", "dias": "Lun–Dom", "hora": "24/7" }
+]

@@ -1,0 +1,32 @@
+{
+  "nombre": "iNteractiva 89.7 FM",
+  "ciudad": "Mérida, Venezuela",
+  "lema": "La radio de los artistas",
+  "slogan": "La radio que le da PLAY a los artistas",
+  "slogan2": "¡Música sin fronteras!",
+  "descripcion": "iNteractiva 89.7 FM en Mérida: la radio que le da PLAY a los artistas. ¡Música sin fronteras!",
+  "logo": "/img/logo.webp",
+  "favicon": "/img/favicon.png",
+  "imagenCompartir": "/img/compartir.jpg",
+  "whatsapp": "584149772646",
+  "whatsappTexto": "+58 414-977-2646",
+  "correo": "interactiva897@gmail.com",
+  "redes": {
+    "instagram": "",
+    "facebook": "",
+    "youtube": "",
+    "tiktok": ""
+  },
+  "reproductor": {
+    "casterToken": "97b093c2-f3ef-441c-8318-be9aecd5adce",
+    "casterCanal": "a3315701-2053-4cf5-8f62-e2d9037068e1",
+    "paginaAlterna": "https://interactiva897.ismyradio.com"
+  },
+  "analitica": {
+    "goatcounter": ""
+  },
+  "nosotros": [
+    "Donde escuchas menos publicidad y más música.",
+    "En iNteractiva, los éxitos musicales de ayer y hoy se fusionan en una experiencia única. Nuestro equipo de contenidos selecciona cuidadosamente las canciones que te acompañarán las 24 horas del día. Desde clásicos hasta las últimas tendencias, sintoniza iNteractiva y déjanos ser parte de tus momentos más memorables."
+  ]
+}

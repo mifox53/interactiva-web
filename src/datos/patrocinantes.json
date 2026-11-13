@@ -1,0 +1,36 @@
+{
+  "rotacionSegundos": 6,
+  "espacios": {
+    "vip": { "titulo": "Apartado VIP", "etiqueta": "VIP" },
+    "premium": { "titulo": "Apartado PREMIUM", "etiqueta": "PREMIUM" },
+    "franja": { "titulo": "Empresas que nos acompañan", "casillasLibres": 3 },
+    "directorio": { "titulo": "Negocios de Mérida" }
+  },
+  "categoriasLibres": ["Servicios", "Salud y bienestar", "Eventos y cultura", "Tiendas"],
+  "patrocinantes": [
+    {
+      "id": "hierro-y-grano",
+      "nombre": "Hierro y Grano",
+      "categoria": "Café",
+      "nivel": "VIP",
+      "logo": "/img/patrocinantes/hierro-y-grano.jpg",
+      "enlace": "https://www.instagram.com/hierroygrano/",
+      "espacios": ["franja", "directorio"],
+      "desde": "",
+      "hasta": "",
+      "activo": true
+    },
+    {
+      "id": "masa-madre",
+      "nombre": "Masa Madre",
+      "categoria": "Salud y alimentos",
+      "nivel": "Premium",
+      "logo": "/img/patrocinantes/masa-madre.jpg",
+      "enlace": "https://www.instagram.com/masamiadre/",
+      "espacios": ["franja", "directorio"],
+      "desde": "",
+      "hasta": "",
+      "activo": true
+    }
+  ]
+}

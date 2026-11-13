@@ -1,0 +1,25 @@
+---
+// Un espacio publicitario. Muestra los patrocinantes asignados a ese espacio
+// en src/datos/patrocinantes.json; si hay varios, rotan; si no hay ninguno
+// vigente, muestra "Espacio disponible".
+import datos from '../datos/patrocinantes.json';
+import { wa } from '../lib/util.js';
+const { espacio } = Astro.props;
+const def = datos.espacios[espacio];
+const lista = datos.patrocinantes.filter((p) => p.activo && p.espacios.includes(espacio));
+---
+<div class={`espacio espacio-${espacio}`} data-espacio data-segundos={datos.rotacionSegundos}>
+  {lista.map((p) => (
+    <a class="esp-item" href={p.enlace} target="_blank" rel="noopener sponsored"
+       data-patrocinante={p.id} data-desde={p.desde} data-hasta={p.hasta} hidden>
+      <span class="insignia">{def.etiqueta}</span>
+      <img src={p.logo} alt={p.nombre} loading="lazy" />
+      <span class="esp-pie"><strong>{p.nombre}</strong><small>{p.categoria} · Patrocinante</small></span>
+    </a>
+  ))}
+  <a class="esp-item esp-libre" data-libre href={wa(`Hola, quiero el espacio ${def.etiqueta} en la página de iNteractiva`)} target="_blank" rel="noopener">
+    <span class="insignia">{def.etiqueta}</span>
+    <strong>{def.titulo}</strong>
+    <small>Espacio disponible · Consultar</small>
+  </a>
+</div>

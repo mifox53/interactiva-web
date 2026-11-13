@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import TarjetaNoticia from '../../componentes/TarjetaNoticia.astro';
+
+const noticias = (await getCollection('noticias', (n) => !n.data.borrador)).sort((a, b) => b.data.fecha - a.data.fecha);
+---
+<Base titulo="Noticias de Mérida" descripcion="Noticias de Mérida: agricultura, café, cultura, eventos y deportes.">
+  <section class="bloque wrap">
+    <div class="cab"><h2>Noticias de Mérida</h2></div>
+    <p class="bajada">Agricultura, café, cultura, eventos y deportes de nuestra ciudad.</p>
+    {noticias.length > 0 ? (
+      <div class="noticias">
+        <div class="lista">{noticias.map((n) => <TarjetaNoticia noticia={n} />)}</div>
+      </div>
+    ) : (
+      <div class="vacio"><strong>Muy pronto</strong><span>Aquí aparecerán cada semana las noticias más relevantes de Mérida.</span></div>
+    )}
+    <a class="volver" href="/">← Volver al inicio</a>
+  </section>
+</Base>

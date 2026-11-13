@@ -1,0 +1,17 @@
+---
+// Barra fija con la radio en vivo (widget de Caster.fm).
+// Los códigos del reproductor están en src/datos/sitio.json -> reproductor.
+import sitio from '../datos/sitio.json';
+const r = sitio.reproductor;
+---
+<div class="dock" id="en-vivo">
+  <div class="dock-info"><span class="punto"></span><div><strong>En vivo</strong><small>{sitio.nombre}</small></div></div>
+  <div class="dock-widget">
+    <div data-type="newStreamPlayer" data-publicToken={r.casterToken} data-theme="dark" data-color="19e0e6"
+         data-channelId={r.casterCanal} data-rendered="false" class="cstrEmbed">
+      <a href="https://www.caster.fm">Shoutcast Hosting</a> <a href="https://www.caster.fm">Stream Hosting</a> <a href="https://www.caster.fm">Radio Server Hosting</a>
+    </div>
+  </div>
+  <a class="dock-alt" href={r.paginaAlterna} target="_blank" rel="noopener">¿No se escucha? Ábrela aquí</a>
+</div>
+<script is:inline src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>

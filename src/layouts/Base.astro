@@ -1,0 +1,99 @@
+---
+// Plantilla común de todas las páginas: cabecera, pie y radio en vivo.
+import '../estilos/global.css';
+import sitio from '../datos/sitio.json';
+import Logo from '../componentes/Logo.astro';
+import Reproductor from '../componentes/Reproductor.astro';
+import { wa } from '../lib/util.js';
+
+const { titulo, descripcion = sitio.descripcion, imagen = sitio.imagenCompartir } = Astro.props;
+const tituloCompleto = titulo ? `${titulo} · ${sitio.nombre}` : `${sitio.nombre} · ${sitio.lema} · Mérida`;
+const url = new URL(Astro.url.pathname, Astro.site);
+const imagenAbs = new URL(imagen, Astro.site);
+const redes = Object.entries(sitio.redes).filter(([, enlace]) => enlace);
+const menu = [
+  ['Noticias', '/#noticias'], ['Artistas', '/#artistas'], ['Agenda', '/#agenda'],
+  ['Programación', '/#programacion'], ['Empresas', '/#empresas'], ['Anúnciate', '/#anunciate'],
+];
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{tituloCompleto}</title>
+  <meta name="description" content={descripcion} />
+  <link rel="canonical" href={url} />
+  <link rel="icon" href={sitio.favicon} />
+  <meta property="og:site_name" content={sitio.nombre} />
+  <meta property="og:title" content={tituloCompleto} />
+  <meta property="og:description" content={descripcion} />
+  <meta property="og:type" content={titulo ? 'article' : 'website'} />
+  <meta property="og:url" content={url} />
+  <meta property="og:image" content={imagenAbs} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <Logo />
+      <nav class="menu" aria-label="Principal">
+        {menu.map(([texto, href]) => <a href={href}>{texto}</a>)}
+      </nav>
+      <a class="btn" href={wa()} target="_blank" rel="noopener">Contáctanos</a>
+    </div>
+  </header>
+
+  <main><slot /></main>
+
+  <footer>
+    <div class="wrap">
+      <div class="pie">
+        <Logo />
+        <div class="redes">
+          {redes.map(([red, enlace]) => <a href={enlace} target="_blank" rel="noopener">{red[0].toUpperCase() + red.slice(1)}</a>)}
+          <a href={wa()} target="_blank" rel="noopener">WhatsApp</a>
+          <a href={`mailto:${sitio.correo}`}>Correo</a>
+        </div>
+      </div>
+      <div class="legal">
+        <span>© {new Date().getFullYear()} {sitio.nombre} · {sitio.ciudad}</span>
+        <span>{sitio.slogan}</span>
+      </div>
+    </div>
+  </footer>
+
+  <Reproductor />
+
+  <script is:inline define:vars={{ gc: sitio.analitica.goatcounter }}>
+    // --- Patrocinantes: vigencia por fechas y rotación ---
+    const hoy = new Date().toISOString().slice(0, 10);
+    const vigente = (el) => (!el.dataset.desde || el.dataset.desde <= hoy) && (!el.dataset.hasta || el.dataset.hasta >= hoy);
+    document.querySelectorAll('[data-desde]').forEach((el) => { if (!vigente(el)) el.remove(); });
+    document.querySelectorAll('[data-espacio]').forEach((esp) => {
+      const items = [...esp.querySelectorAll('[data-patrocinante]')];
+      const libre = esp.querySelector('[data-libre]');
+      if (!items.length) return;
+      libre.hidden = true;
+      let i = Math.floor(Math.random() * items.length);
+      const ver = () => items.forEach((el, k) => (el.hidden = k !== i));
+      ver();
+      if (items.length > 1) setInterval(() => { i = (i + 1) % items.length; ver(); }, (+esp.dataset.segundos || 6) * 1000);
+    });
+    // --- Conteo de clics por patrocinante (se activa al poner el código en sitio.json) ---
+    if (gc) {
+      const s = document.createElement('script');
+      s.async = true; s.src = 'https://gc.zgo.at/count.js';
+      s.dataset.goatcounter = `https://${gc}.goatcounter.com/count`;
+      document.head.appendChild(s);
+      document.addEventListener('click', (e) => {
+        const a = e.target.closest('[data-patrocinante]');
+        if (a && window.goatcounter?.count) window.goatcounter.count({ path: `clic-patrocinante-${a.dataset.patrocinante}`, title: a.dataset.patrocinante, event: true });
+      });
+    }
+  </script>
+</body>
+</html>

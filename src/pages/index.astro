@@ -1,0 +1,244 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import EspacioPatrocinante from '../componentes/EspacioPatrocinante.astro';
+import TarjetaNoticia from '../componentes/TarjetaNoticia.astro';
+import sitio from '../datos/sitio.json';
+import patro from '../datos/patrocinantes.json';
+import programacion from '../datos/programacion.json';
+import { wa, fechaLarga } from '../lib/util.js';
+
+// Noticias publicadas, la más reciente primero (la destacada sube al inicio)
+const noticias = (await getCollection('noticias', (n) => !n.data.borrador))
+  .sort((a, b) => Number(b.data.destacada) - Number(a.data.destacada) || b.data.fecha - a.data.fecha)
+  .slice(0, 5);
+
+const artistas = (await getCollection('artistas')).sort((a, b) => a.data.orden - b.data.orden);
+
+// Eventos y saludos publicados (el filtro por fecha se termina de aplicar en el navegador)
+const eventos = (await getCollection('eventos', (e) => !e.data.borrador)).sort((a, b) => a.data.fecha - b.data.fecha);
+
+// Portada: hasta 4 artistas; los huecos se rellenan con invitaciones
+const degradados = [
+  'linear-gradient(160deg,#8b3dff,#161a55)', 'linear-gradient(160deg,#ff5fd2,#5b1fd6)',
+  'linear-gradient(160deg,#19e0e6,#2a2fb8)', 'linear-gradient(160deg,#ff7a3d,#b01f8f)',
+];
+const huecos = [
+  { etiqueta: 'Artista local', nombre: 'Próximamente' },
+  { etiqueta: 'Artista internacional', nombre: 'Próximamente' },
+  { etiqueta: 'Nuevo talento', nombre: 'Tu música aquí' },
+];
+const portada = [0, 1, 2, 3].map((i) => {
+  const a = artistas[i];
+  if (a) return { etiqueta: a.data.destacado ? 'Artista destacado' : `Artista ${a.data.tipo}`, nombre: a.data.nombre, foto: a.data.foto, i };
+  return { ...huecos[(i - artistas.length + 3) % 3], i };
+});
+
+const franja = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('franja'));
+const directorio = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('directorio'));
+const fichasLibres = Math.max(0, 4 - artistas.length);
+---
+<Base>
+  <!-- ============ PORTADA ============ -->
+  <div class="hero" id="inicio">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="k">{sitio.lema}</span>
+          <h1>La radio que le da <em>PLAY</em> a los artistas.</h1>
+          <p class="sub">{sitio.slogan2} Desde Mérida para el mundo.</p>
+          <div class="regla"></div>
+          <div class="hero-acc">
+            <a class="btn lleno" href="#en-vivo">▶ Escuchar en vivo</a>
+            <a class="btn" href="#artistas">Conoce a los artistas</a>
+          </div>
+        </div>
+        <div class="escena" aria-label="Artistas de iNteractiva">
+          {portada.map((c) => (
+            <a class={`art a${c.i}`} href="#artistas"
+               style={`--g:${c.foto ? `url('${c.foto}')` : degradados[c.i]}`}>
+              <b><small>{c.etiqueta}</small>{c.nombre}</b>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div class="esp-fila">
+        <EspacioPatrocinante espacio="vip" />
+        <EspacioPatrocinante espacio="premium" />
+      </div>
+
+      <div class="franja">
+        <span class="k">{patro.espacios.franja.titulo}</span>
+        <div class="logos">
+          {franja.map((p) => (
+            <a class="casilla" href={p.enlace} target="_blank" rel="noopener sponsored" title={p.nombre}
+               data-patrocinante={p.id} data-desde={p.desde} data-hasta={p.hasta}>
+              <img src={p.logo} alt={p.nombre} loading="lazy" />
+            </a>
+          ))}
+          {Array.from({ length: patro.espacios.franja.casillasLibres }).map(() => (
+            <a class="casilla libre" href={wa('Hola, quiero que mi logo aparezca en iNteractiva')} target="_blank" rel="noopener">Tu logo aquí</a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ NOTICIAS ============ -->
+  <section class="bloque wrap" id="noticias">
+    <div class="cab"><h2>Mérida ahora</h2>{noticias.length > 0 && <a href="/noticias/">Ver todas →</a>}</div>
+    <p class="bajada">Agricultura, café, cultura, eventos y deportes de nuestra ciudad.</p>
+    {noticias.length > 0 ? (
+      <div class:list={['noticias', { una: noticias.length === 1 }]}>
+        <TarjetaNoticia noticia={noticias[0]} grande />
+        <div class="lista">{noticias.slice(1).map((n) => <TarjetaNoticia noticia={n} />)}</div>
+      </div>
+    ) : (
+      <div class="vacio">
+        <strong>Muy pronto</strong>
+        <span>Aquí aparecerán cada semana las noticias más relevantes de Mérida.</span>
+      </div>
+    )}
+  </section>
+
+  <!-- ============ ARTISTAS ============ -->
+  <section class="bloque wrap" id="artistas">
+    <div class="cab"><h2>Artistas</h2></div>
+    <p class="bajada">Artistas locales e internacionales que suenan en la 89.7.</p>
+    <div class="rejilla">
+      {artistas.map((a) => (
+        <a class="ficha" href={a.data.enlace || a.data.instagram || wa(`Hola, quiero información sobre ${a.data.nombre} en iNteractiva`)}
+           target="_blank" rel="noopener" style={a.data.foto ? `--g:url('${a.data.foto}')` : `--g:${degradados[1]}`}>
+          <span class="k">Artista {a.data.tipo}</span>
+          <strong>{a.data.nombre}</strong>
+        </a>
+      ))}
+      {Array.from({ length: fichasLibres }).map((_, i) => (
+        <a class="ficha libre" href={wa('Hola, soy artista y quiero mi ficha en iNteractiva')} target="_blank" rel="noopener">
+          <span class="k">{i % 2 ? 'Artista internacional' : 'Artista local'}</span>
+          <strong>Próximamente</strong>
+          <small>¿Eres artista? Pide tu ficha →</small>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ AGENDA: EVENTOS Y SALUDOS ============ -->
+  <section class="bloque wrap" id="agenda">
+    <div class="cab"><h2>Agenda y saludos</h2></div>
+    <p class="bajada">Eventos y saludos publicados por artistas y negocios.</p>
+    <div class="agenda" data-agenda>
+      {eventos.map((e) => (
+        <a class="evento" href={e.data.enlace || undefined} target="_blank" rel="noopener"
+           data-vence={(e.data.hasta ?? e.data.fecha).toISOString().slice(0, 10)}>
+          {e.data.patrocinado && <span class="patro">Patrocinado</span>}
+          <span class="dia">{e.data.tipo === 'saludo' ? 'Saludo' : fechaLarga(e.data.fecha)}</span>
+          <h3>{e.data.titulo}</h3>
+          <p>{[e.data.artista, e.data.lugar].filter(Boolean).join(' · ')}</p>
+        </a>
+      ))}
+      <a class="evento vacio" href={wa('Hola, quiero publicar un evento o saludo en la agenda de iNteractiva')} target="_blank" rel="noopener">
+        <span class="dia">Publica aquí</span>
+        <strong>¿Tienes un evento o un saludo?</strong>
+        <span>Envíalo por WhatsApp y lo publicamos →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ PROGRAMACIÓN ============ -->
+  <section class="bloque wrap" id="programacion">
+    <div class="cab"><h2>Programación</h2></div>
+    <p class="bajada">Lo que suena en iNteractiva.</p>
+    <div class="parrilla">
+      {programacion.map((p) => (
+        <div class="fila">
+          <div><h3>{p.programa}</h3><p>{p.detalle}</p></div>
+          <div class="h">{p.dias}<br />{p.hora}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ EMPRESAS ============ -->
+  <section class="bloque wrap" id="empresas">
+    <div class="cab"><h2>{patro.espacios.directorio.titulo}</h2></div>
+    <p class="bajada">Las marcas que nos acompañan y el espacio para la tuya.</p>
+    <div class="directorio">
+      {directorio.map((p) => (
+        <a class="neg" href={p.enlace} target="_blank" rel="noopener sponsored"
+           data-patrocinante={p.id} data-desde={p.desde} data-hasta={p.hasta}>
+          <span class="k">{p.categoria} · {p.nivel}</span>
+          <strong>{p.nombre}</strong>
+          <small>Visitar →</small>
+        </a>
+      ))}
+      {patro.categoriasLibres.map((c) => (
+        <a class="neg libre" href={wa(`Hola, quiero una ficha de negocio en iNteractiva (${c})`)} target="_blank" rel="noopener">
+          <span class="k">{c}</span>
+          <strong>Espacio disponible</strong>
+          <small>Alta de negocio →</small>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ NOSOTROS ============ -->
+  <section class="bloque wrap nosotros" id="nosotros">
+    <div class="cab"><h2>Nosotros</h2></div>
+    {sitio.nosotros.map((p) => <p>{p}</p>)}
+  </section>
+
+  <!-- ============ ANÚNCIATE ============ -->
+  <section class="bloque wrap" id="anunciate">
+    <div class="cab"><h2>Anúnciate</h2></div>
+    <p class="bajada">Pon tu negocio, tu evento o tu música. Llena el formulario y te contactamos por WhatsApp; los precios y formas de pago se coordinan con nuestro equipo.</p>
+    <div class="anuncio">
+      <div class="planes">
+        <div class="plan"><h3>Cuadrículas Premium, VIP o Emprendedor</h3><p>Tu imagen comercial al lado de tus artistas preferidos, con exposición fija por 3, 6 o 12 meses.</p><span>Consultar</span></div>
+        <div class="plan"><h3>Ficha básica</h3><p>Nombre, categoría, horario, contacto y foto en el directorio.</p><span>Consultar</span></div>
+        <div class="plan"><h3>Ficha destacada</h3><p>Aparece en la portada, con publicaciones fijadas y campañas en la agenda.</p><span>Consultar</span></div>
+      </div>
+      <form class="form" id="altaForm">
+        <label>Nombre del negocio o artista<input name="nombre" required /></label>
+        <label>Categoría
+          <select name="categoria" required>
+            <option>Artista</option><option>Café y comida</option><option>Servicios</option><option>Salud y bienestar</option>
+            <option>Eventos y cultura</option><option>Tiendas</option><option>Educación</option><option>Otro</option>
+          </select>
+        </label>
+        <label>WhatsApp<input name="whatsapp" required placeholder="+58" /></label>
+        <label>Dirección o ciudad<input name="direccion" placeholder="Ej. Av. principal, Mérida" /></label>
+        <label class="ancho">Descripción corta<textarea name="descripcion" placeholder="Qué haces, qué ofreces, horario"></textarea></label>
+        <button class="btn lleno" type="submit">Enviar por WhatsApp</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ CONTACTO ============ -->
+  <section class="bloque wrap" id="contacto">
+    <div class="contacto">
+      <div>
+        <h2>Hablemos</h2>
+        <p>Publicidad, saludos o información general.</p>
+        <p>O escribe a <a href={`mailto:${sitio.correo}`}>{sitio.correo}</a></p>
+      </div>
+      <a class="btn lleno" href={wa()} target="_blank" rel="noopener">WhatsApp · {sitio.whatsappTexto}</a>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ numero: sitio.whatsapp }}>
+    // Oculta eventos y saludos vencidos
+    const hoyAg = new Date().toISOString().slice(0, 10);
+    document.querySelectorAll('[data-vence]').forEach((el) => { if (el.dataset.vence < hoyAg) el.remove(); });
+    // Formulario -> mensaje de WhatsApp
+    document.getElementById('altaForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = new FormData(this);
+      const msg = 'Hola, quiero dar de alta una ficha en iNteractiva.\n' +
+        `Nombre: ${f.get('nombre')}\nCategoría: ${f.get('categoria')}\nWhatsApp: ${f.get('whatsapp')}\n` +
+        `Dirección: ${f.get('direccion') || '-'}\nDescripción: ${f.get('descripcion') || '-'}`;
+      window.open(`https://wa.me/${numero}?text=` + encodeURIComponent(msg), '_blank', 'noopener');
+    });
+  </script>
+</Base>
