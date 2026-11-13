@@ -35,6 +35,12 @@ elegidos al azar (los mismos para todos los visitantes ese día). Para agregar u
 `public/img/artistas/` y un archivo `.md` en `src/contenido/artistas/` con `nombre`, `foto` y `saludo`.
 Para ver cómo saldrá otro día: `interactiva.com.ve/?fecha=2026-12-25`.
 
+## Artistas en la portada
+
+La portada muestra 4 artistas. Si hay más de 4 en `src/contenido/artistas/`, se eligen 4 al azar
+y la selección cambia sola una vez al día (hora de Venezuela). Para sumar un artista basta crear su
+archivo `.md` con `nombre`, `foto` y `saludo`; las fotos van en `public/img/artistas/`, mejor verticales.
+
 ## Patrocinantes
 
 Cada patrocinante tiene:

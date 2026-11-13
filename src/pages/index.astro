@@ -18,26 +18,23 @@ const artistas = (await getCollection('artistas')).sort((a, b) => a.data.orden -
 // Eventos y saludos publicados (el filtro por fecha se termina de aplicar en el navegador)
 const eventos = (await getCollection('eventos', (e) => !e.data.borrador)).sort((a, b) => a.data.fecha - b.data.fecha);
 
-// Portada: hasta 4 artistas; los huecos se rellenan con invitaciones
+// Portada: 4 artistas. Si hay más de 4, el navegador elige 4 al azar cada día
+// (la misma selección para todos los visitantes durante ese día, hora de Venezuela).
 const degradados = [
-  'linear-gradient(160deg,#8b3dff,#161a55)', 'linear-gradient(160deg,#ff5fd2,#5b1fd6)',
+  'linear-gradient(160deg,#ff5fd2,#5b1fd6)', 'linear-gradient(160deg,#8b3dff,#161a55)',
   'linear-gradient(160deg,#19e0e6,#2a2fb8)', 'linear-gradient(160deg,#ff7a3d,#b01f8f)',
 ];
 const huecos = [
   { etiqueta: 'Artista local', nombre: 'Próximamente' },
   { etiqueta: 'Artista internacional', nombre: 'Próximamente' },
   { etiqueta: 'Nuevo talento', nombre: 'Tu música aquí' },
+  { etiqueta: 'Artista local', nombre: 'Próximamente' },
 ];
-const etiquetaDe = (a) => (a.data.tipo ? `Artista ${a.data.tipo}` : 'Artista');
-const portada = [0, 1, 2, 3].map((i) => {
-  const a = artistas[i];
-  if (a) return { etiqueta: etiquetaDe(a), nombre: a.data.nombre, foto: a.data.foto, enlace: a.data.saludo, i };
-  return { ...huecos[(i - artistas.length + 3) % 3], i };
-});
-// Artistas que pueden salir en la portada: los que tienen foto.
-// Si hay más de 4, el navegador elige 4 al azar cada día (ver script de la portada).
-const rotables = artistas.filter((a) => a.data.foto)
-  .map((a) => ({ e: etiquetaDe(a), n: a.data.nombre, f: a.data.foto, u: a.data.saludo || '' }));
+const etiquetaDe = (a) => (a.data.destacado ? 'Artista destacado' : a.data.tipo ? `Artista ${a.data.tipo}` : 'Artista');
+const paraPortada = artistas.map((a) => ({
+  etiqueta: etiquetaDe(a), nombre: a.data.nombre, foto: a.data.foto ?? '', enlace: a.data.saludo ?? '#artistas',
+}));
+const portada = [0, 1, 2, 3].map((i) => paraPortada[i] ?? { ...huecos[i], foto: '', enlace: '#artistas' });
 
 const franja = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('franja'));
 const directorio = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('directorio'));
@@ -58,35 +55,15 @@ const fichasLibres = Math.max(1, 4 - artistas.length);
             <a class="btn" href="#artistas">Conoce a los artistas</a>
           </div>
         </div>
-        <div class="escena" aria-label="Artistas de iNteractiva">
-          {portada.map((c) => (
-            <a class={`art a${c.i}`} href={c.enlace || '#artistas'} target={c.enlace ? '_blank' : undefined} rel="noopener"
-               style={`--g:${c.foto ? `url('${c.foto}')` : degradados[c.i]}`}>
+        <div class="escena" aria-label="Artistas de iNteractiva" data-portada>
+          {portada.map((c, i) => (
+            <a class={`art a${i}`} href={c.enlace} target={c.enlace.startsWith('#') ? undefined : '_blank'} rel="noopener" data-degradado={degradados[i]}
+               style={`--g:${c.foto ? `url('${c.foto}')` : degradados[i]}`}>
               <b><small>{c.etiqueta}</small><span>{c.nombre}</span></b>
             </a>
           ))}
         </div>
-        <script is:inline define:vars={{ rotables }}>
-          // Portada: 4 artistas al azar, distintos cada día e iguales para todos los visitantes.
-          // El sorteo usa la fecha de Venezuela como semilla. Para probar otro día: ?fecha=2026-12-25
-          (function () {
-            if (rotables.length <= 4) return;
-            const dia = new URLSearchParams(location.search).get('fecha') ||
-              new Date(Date.now() - 4 * 3600 * 1000).toISOString().slice(0, 10);
-            let h = 2166136261;
-            for (const ch of dia) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
-            const azar = () => { h += 0x6d2b79f5; let t = h; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-            const lista = rotables.slice();
-            for (let i = lista.length - 1; i > 0; i--) { const j = Math.floor(azar() * (i + 1)); [lista[i], lista[j]] = [lista[j], lista[i]]; }
-            document.querySelectorAll('.escena .art').forEach((el, i) => {
-              const a = lista[i];
-              el.style.setProperty('--g', `url('${a.f}')`);
-              el.querySelector('small').textContent = a.e;
-              el.querySelector('span').textContent = a.n;
-              if (a.u) { el.href = a.u; el.target = '_blank'; } else { el.href = '#artistas'; el.removeAttribute('target'); }
-            });
-          })();
-        </script>
+        <script type="application/json" id="artistas-portada" set:html={JSON.stringify(paraPortada)}></script>
       </div>
 
       <div class="esp-fila">
@@ -230,5 +207,32 @@ const fichasLibres = Math.max(1, 4 - artistas.length);
     // Oculta eventos y saludos vencidos
     const hoyAg = new Date().toISOString().slice(0, 10);
     document.querySelectorAll('[data-vence]').forEach((el) => { if (el.dataset.vence < hoyAg) el.remove(); });
+
+    // Portada: con más de 4 artistas, elige 4 al azar; la selección cambia una vez al día
+    (function () {
+      const todos = JSON.parse(document.getElementById('artistas-portada').textContent);
+      if (todos.length <= 4) return;
+      const dia = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Caracas' }).format(new Date());
+      let semilla = 0;
+      for (const ch of dia) semilla = (Math.imul(semilla, 31) + ch.charCodeAt(0)) >>> 0;
+      const azar = () => {
+        semilla = (semilla + 0x6d2b79f5) >>> 0;
+        let t = Math.imul(semilla ^ (semilla >>> 15), 1 | semilla);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+      for (let i = todos.length - 1; i > 0; i--) {
+        const j = Math.floor(azar() * (i + 1));
+        [todos[i], todos[j]] = [todos[j], todos[i]];
+      }
+      document.querySelectorAll('[data-portada] .art').forEach((el, i) => {
+        const a = todos[i];
+        el.style.setProperty('--g', a.foto ? `url('${a.foto}')` : el.dataset.degradado);
+        el.href = a.enlace;
+        if (a.enlace.startsWith('#')) el.removeAttribute('target'); else el.target = '_blank';
+        el.querySelector('small').textContent = a.etiqueta;
+        el.querySelector('span').textContent = a.nombre;
+      });
+    })();
   </script>
 </Base>
