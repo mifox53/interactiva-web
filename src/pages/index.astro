@@ -31,14 +31,15 @@ const huecos = [
   { etiqueta: 'Artista local', nombre: 'Próximamente' },
 ];
 const etiquetaDe = (a) => (a.data.destacado ? 'Artista destacado' : a.data.tipo ? `Artista ${a.data.tipo}` : 'Artista');
-const paraPortada = artistas.map((a) => ({
+// Solo rotan en la portada los artistas que ya tienen foto
+const paraPortada = artistas.filter((a) => a.data.foto).map((a) => ({
   etiqueta: etiquetaDe(a), nombre: a.data.nombre, foto: a.data.foto ?? '', enlace: a.data.saludo ?? '#artistas',
 }));
 const portada = [0, 1, 2, 3].map((i) => paraPortada[i] ?? { ...huecos[i], foto: '', enlace: '#artistas' });
 
 const franja = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('franja'));
 const directorio = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('directorio'));
-const fichasLibres = Math.max(1, 4 - artistas.length);
+const fichasLibres = artistas.length % 4 === 0 ? 0 : 4 - (artistas.length % 4);
 ---
 <Base>
   <!-- ============ PORTADA ============ -->
