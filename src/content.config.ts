@@ -26,8 +26,10 @@ const artistas = defineCollection({
   loader: glob({ pattern: '**/[^_]*.md', base: './src/contenido/artistas' }),
   schema: z.object({
     nombre: z.string(),
-    tipo: z.enum(['local', 'internacional']),
+    tipo: z.enum(['local', 'internacional']).optional(),
     foto: z.string().optional(),
+    // Enlace al video de saludo del artista (por ejemplo, la publicación en Instagram)
+    saludo: z.string().url().optional(),
     destacado: z.boolean().default(false),
     orden: z.number().default(100),
     instagram: z.string().optional(),

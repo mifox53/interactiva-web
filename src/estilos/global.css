@@ -51,7 +51,7 @@ h1 em{font-style:italic;color:var(--cyan)}
 .hero-acc{display:flex;gap:12px;flex-wrap:wrap}
 
 .escena{position:relative;height:430px}
-.art{position:absolute;border-radius:var(--r);overflow:hidden;border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 60px -20px rgba(0,0,0,.7);background:var(--g) center/cover no-repeat;transition:transform .35s}
+.art{position:absolute;border-radius:var(--r);overflow:hidden;border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 60px -20px rgba(0,0,0,.7);background:var(--g) center top/cover no-repeat;transition:transform .35s}
 .art:hover{transform:translateY(-8px) rotate(0)!important;z-index:5}
 .art::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(6,7,22,.92))}
 .art b{position:absolute;left:16px;right:12px;bottom:14px;z-index:1;font-size:1rem;line-height:1.15}
@@ -59,6 +59,7 @@ h1 em{font-style:italic;color:var(--cyan)}
 .a0{left:27%;top:0;width:42%;height:410px;z-index:2}
 .a1{left:0;top:70px;width:34%;height:290px;transform:rotate(-5deg)}
 .a2{right:0;top:40px;width:34%;height:250px;transform:rotate(5deg)}
+.a2 b{left:34px}
 .a3{right:3%;bottom:0;width:28%;height:118px;z-index:3;transform:rotate(-3deg)}
 
 /* ---------- Espacios de patrocinantes ---------- */
@@ -119,14 +120,15 @@ section.bloque{padding:52px 0 6px}
 
 /* Artistas */
 .rejilla{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.ficha{position:relative;min-height:230px;border-radius:var(--r);border:1px solid var(--line);overflow:hidden;background:var(--g,var(--card)) center/cover no-repeat;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;transition:.25s}
+.ficha{position:relative;min-height:230px;border-radius:var(--r);border:1px solid var(--line);overflow:hidden;background:var(--g,var(--card)) center top/cover no-repeat;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;transition:.25s}
 .ficha::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(6,7,22,.92))}
 .ficha>*{position:relative;z-index:1}
 .ficha:hover{transform:translateY(-5px);border-color:var(--cyan)}
 .ficha strong{font-size:1.1rem}
 .ficha.libre{border-style:dashed;background:none}
 .ficha.libre::after{display:none}
-.ficha small{font-size:.8rem;color:var(--mut)}
+.ficha small{font-size:.8rem;color:#d5d7f3}
+.ficha.libre small{color:var(--mut)}
 
 /* Agenda */
 .agenda{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}

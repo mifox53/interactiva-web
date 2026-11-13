@@ -12,7 +12,7 @@ para cambiar algo casi siempre se toca **un solo archivo pequeño**.
 | Patrocinantes: agregar, quitar, rotar, fechas, espacio que ocupan | `src/datos/patrocinantes.json` |
 | Programación | `src/datos/programacion.json` |
 | Noticias | un archivo `.md` por noticia en `src/contenido/noticias/` |
-| Artistas | un archivo `.md` por artista en `src/contenido/artistas/` |
+| Artistas | un archivo `.md` por artista en `src/contenido/artistas/` (`saludo` = enlace a su video de saludo) |
 | Eventos y saludos | un archivo `.md` por evento en `src/contenido/eventos/` |
 | Texto de "Nosotros" | `src/datos/sitio.json` → `nosotros` |
 | Planes y formulario de anunciantes | `src/pages/anunciate.astro` |

@@ -30,7 +30,7 @@ const huecos = [
 ];
 const portada = [0, 1, 2, 3].map((i) => {
   const a = artistas[i];
-  if (a) return { etiqueta: a.data.destacado ? 'Artista destacado' : `Artista ${a.data.tipo}`, nombre: a.data.nombre, foto: a.data.foto, i };
+  if (a) return { etiqueta: a.data.destacado ? 'Artista destacado' : a.data.tipo ? `Artista ${a.data.tipo}` : 'Artista', nombre: a.data.nombre, foto: a.data.foto, i };
   return { ...huecos[(i - artistas.length + 3) % 3], i };
 });
 
@@ -107,11 +107,12 @@ const fichasLibres = Math.max(1, 4 - artistas.length);
     <div class="cab"><h2>Artistas</h2></div>
     <p class="bajada">Artistas locales e internacionales que suenan en la 89.7.</p>
     <div class="rejilla desliza">
-      {artistas.map((a) => (
-        <a class="ficha" href={a.data.enlace || a.data.instagram || wa(`Hola, quiero información sobre ${a.data.nombre} en iNteractiva`)}
-           target="_blank" rel="noopener" style={a.data.foto ? `--g:url('${a.data.foto}')` : `--g:${degradados[1]}`}>
-          <span class="k">Artista {a.data.tipo}</span>
+      {artistas.map((a, n) => (
+        <a class="ficha" href={a.data.saludo || a.data.enlace || a.data.instagram || wa(`Hola, quiero información sobre ${a.data.nombre} en iNteractiva`)}
+           target="_blank" rel="noopener" style={`--g:${a.data.foto ? `url('${a.data.foto}')` : degradados[n % degradados.length]}`}>
+          <span class="k">{a.data.tipo ? `Artista ${a.data.tipo}` : 'Artista'}</span>
           <strong>{a.data.nombre}</strong>
+          {a.data.saludo && <small>▶ Ver saludo</small>}
         </a>
       ))}
       {Array.from({ length: fichasLibres }).map((_, i) => (
