@@ -38,7 +38,8 @@ Para ver cómo saldrá otro día: `interactiva.com.ve/?fecha=2026-12-25`.
 ## Artistas en la portada
 
 La portada muestra 4 artistas. Si hay más de 4 en `src/contenido/artistas/`, se eligen 4 al azar
-y la selección cambia sola una vez al día (hora de Venezuela). Para sumar un artista basta crear su
+y la selección cambia sola cada 10 minutos (el valor `MINUTOS` en `src/pages/index.astro`).
+Solo rotan los artistas que tienen foto. Para sumar un artista basta crear su
 archivo `.md` con `nombre`, `foto` y `saludo`; las fotos van en `public/img/artistas/`, mejor verticales.
 
 ## Patrocinantes
