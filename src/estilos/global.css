@@ -218,7 +218,7 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
   .hero{padding-top:34px}.escena{height:290px}.a0{height:285px}.a1,.a2{height:200px;top:40px}.a3{display:none}
   .form{grid-template-columns:1fr}
   .esp-fila{gap:12px;margin-top:26px}.espacio,.esp-item{min-height:112px}
-  .esp-item{padding:14px}.esp-libre strong{font-size:.92rem}.esp-item small{font-size:.7rem}
+  .esp-item{padding:46px 14px 14px}.esp-libre strong{font-size:.92rem}.esp-item small{font-size:.7rem}
   section.bloque{padding-top:38px}
   /* En celular las tarjetas se deslizan de lado en vez de apilarse (página más corta) */
   .desliza{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:-20px;padding-inline:20px;scroll-padding-inline:20px;scrollbar-width:none}
