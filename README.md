@@ -14,6 +14,8 @@ para cambiar algo casi siempre se toca **un solo archivo pequeño**.
 | Noticias | un archivo `.md` por noticia en `src/contenido/noticias/` |
 | Artistas | un archivo `.md` por artista en `src/contenido/artistas/` |
 | Eventos y saludos | un archivo `.md` por evento en `src/contenido/eventos/` |
+| Texto de "Nosotros" | `src/datos/sitio.json` → `nosotros` |
+| Planes y formulario de anunciantes | `src/pages/anunciate.astro` |
 | Colores y estilos | `src/estilos/global.css` |
 
 Los archivos `_plantilla.md` son modelos para copiar; no se publican.
@@ -32,6 +34,7 @@ Cada patrocinante tiene:
 
 - `espacios`: dónde aparece (`vip`, `premium`, `franja`, `directorio`).
 - `desde` / `hasta` (formato `2026-12-31`): entra y sale solo en esas fechas. Vacío = sin límite.
+- `lema`, `direccion`, `video` (opcionales): se muestran en la ficha del directorio.
 - `activo`: `false` lo saca sin borrarlo.
 
 Si un espacio `vip` o `premium` tiene varios patrocinantes, rotan cada `rotacionSegundos`.

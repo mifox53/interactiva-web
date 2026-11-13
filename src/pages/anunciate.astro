@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import sitio from '../datos/sitio.json';
+---
+<Base titulo="Anúnciate" descripcion="Anuncia tu negocio, tu evento o tu música en iNteractiva 89.7 FM, Mérida.">
+  <section class="bloque wrap nosotros">
+    <div class="cab"><h2>Nosotros</h2></div>
+    {sitio.nosotros.map((p) => <p>{p}</p>)}
+  </section>
+
+  <section class="bloque wrap" id="anunciate">
+    <div class="cab"><h2>Anúnciate</h2></div>
+    <p class="bajada">Pon tu negocio, tu evento o tu música. Llena el formulario y te contactamos por WhatsApp; los precios y formas de pago se coordinan con nuestro equipo.</p>
+    <div class="anuncio">
+      <div class="planes">
+        <div class="plan"><h3>Cuadrículas Premium, VIP o Emprendedor</h3><p>Tu imagen comercial al lado de tus artistas preferidos, con exposición fija por 3, 6 o 12 meses.</p><span>Consultar</span></div>
+        <div class="plan"><h3>Ficha básica</h3><p>Nombre, categoría, horario, contacto y foto en el directorio.</p><span>Consultar</span></div>
+        <div class="plan"><h3>Ficha destacada</h3><p>Aparece en la portada, con publicaciones fijadas y campañas en la agenda.</p><span>Consultar</span></div>
+      </div>
+      <form class="form" id="altaForm">
+        <label>Nombre del negocio o artista<input name="nombre" required /></label>
+        <label>Categoría
+          <select name="categoria" required>
+            <option>Artista</option><option>Café y comida</option><option>Servicios</option><option>Salud y bienestar</option>
+            <option>Eventos y cultura</option><option>Tiendas</option><option>Educación</option><option>Otro</option>
+          </select>
+        </label>
+        <label>WhatsApp<input name="whatsapp" required placeholder="+58" /></label>
+        <label>Dirección o ciudad<input name="direccion" placeholder="Ej. Av. principal, Mérida" /></label>
+        <label class="ancho">Descripción corta<textarea name="descripcion" placeholder="Qué haces, qué ofreces, horario"></textarea></label>
+        <button class="btn lleno" type="submit">Enviar por WhatsApp</button>
+      </form>
+    </div>
+    <a class="volver" href="/">← Volver al inicio</a>
+  </section>
+
+  <script is:inline define:vars={{ numero: sitio.whatsapp }}>
+    // Formulario -> mensaje de WhatsApp
+    document.getElementById('altaForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const f = new FormData(this);
+      const msg = 'Hola, quiero dar de alta una ficha en iNteractiva.\n' +
+        `Nombre: ${f.get('nombre')}\nCategoría: ${f.get('categoria')}\nWhatsApp: ${f.get('whatsapp')}\n` +
+        `Dirección: ${f.get('direccion') || '-'}\nDescripción: ${f.get('descripcion') || '-'}`;
+      window.open(`https://wa.me/${numero}?text=` + encodeURIComponent(msg), '_blank', 'noopener');
+    });
+  </script>
+</Base>

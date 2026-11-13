@@ -36,7 +36,7 @@ const portada = [0, 1, 2, 3].map((i) => {
 
 const franja = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('franja'));
 const directorio = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('directorio'));
-const fichasLibres = Math.max(0, 4 - artistas.length);
+const fichasLibres = Math.max(1, 4 - artistas.length);
 ---
 <Base>
   <!-- ============ PORTADA ============ -->
@@ -106,7 +106,7 @@ const fichasLibres = Math.max(0, 4 - artistas.length);
   <section class="bloque wrap" id="artistas">
     <div class="cab"><h2>Artistas</h2></div>
     <p class="bajada">Artistas locales e internacionales que suenan en la 89.7.</p>
-    <div class="rejilla">
+    <div class="rejilla desliza">
       {artistas.map((a) => (
         <a class="ficha" href={a.data.enlace || a.data.instagram || wa(`Hola, quiero información sobre ${a.data.nombre} en iNteractiva`)}
            target="_blank" rel="noopener" style={a.data.foto ? `--g:url('${a.data.foto}')` : `--g:${degradados[1]}`}>
@@ -128,7 +128,7 @@ const fichasLibres = Math.max(0, 4 - artistas.length);
   <section class="bloque wrap" id="agenda">
     <div class="cab"><h2>Agenda y saludos</h2></div>
     <p class="bajada">Eventos y saludos publicados por artistas y negocios.</p>
-    <div class="agenda" data-agenda>
+    <div class="agenda desliza" data-agenda>
       {eventos.map((e) => (
         <a class="evento" href={e.data.enlace || undefined} target="_blank" rel="noopener"
            data-vence={(e.data.hasta ?? e.data.fecha).toISOString().slice(0, 10)}>
@@ -164,81 +164,44 @@ const fichasLibres = Math.max(0, 4 - artistas.length);
   <section class="bloque wrap" id="empresas">
     <div class="cab"><h2>{patro.espacios.directorio.titulo}</h2></div>
     <p class="bajada">Las marcas que nos acompañan y el espacio para la tuya.</p>
-    <div class="directorio">
+    <div class="directorio desliza">
       {directorio.map((p) => (
-        <a class="neg" href={p.enlace} target="_blank" rel="noopener sponsored"
-           data-patrocinante={p.id} data-desde={p.desde} data-hasta={p.hasta}>
-          <span class="k">{p.categoria} · {p.nivel}</span>
+        <div class="neg" data-patrocinante={p.id} data-desde={p.desde} data-hasta={p.hasta}>
+          <span class="k">{[p.categoria, p.nivel].filter(Boolean).join(' · ')}</span>
           <strong>{p.nombre}</strong>
-          <small>Visitar →</small>
-        </a>
+          {p.lema && <small>{p.lema}</small>}
+          {p.direccion && <small>{p.direccion}</small>}
+          <span class="neg-enl">
+            <a href={p.enlace} target="_blank" rel="noopener sponsored">Visitar →</a>
+            {p.video && <a href={p.video} target="_blank" rel="noopener sponsored">Ver video →</a>}
+          </span>
+        </div>
       ))}
-      {patro.categoriasLibres.map((c) => (
-        <a class="neg libre" href={wa(`Hola, quiero una ficha de negocio en iNteractiva (${c})`)} target="_blank" rel="noopener">
-          <span class="k">{c}</span>
-          <strong>Espacio disponible</strong>
-          <small>Alta de negocio →</small>
-        </a>
-      ))}
+      <a class="neg libre" href="/anunciate/">
+        <span class="k">Tu negocio aquí</span>
+        <strong>Espacio disponible</strong>
+        <small>Conoce cómo anunciarte →</small>
+      </a>
     </div>
   </section>
 
-  <!-- ============ NOSOTROS ============ -->
-  <section class="bloque wrap nosotros" id="nosotros">
-    <div class="cab"><h2>Nosotros</h2></div>
-    {sitio.nosotros.map((p) => <p>{p}</p>)}
-  </section>
-
-  <!-- ============ ANÚNCIATE ============ -->
-  <section class="bloque wrap" id="anunciate">
-    <div class="cab"><h2>Anúnciate</h2></div>
-    <p class="bajada">Pon tu negocio, tu evento o tu música. Llena el formulario y te contactamos por WhatsApp; los precios y formas de pago se coordinan con nuestro equipo.</p>
-    <div class="anuncio">
-      <div class="planes">
-        <div class="plan"><h3>Cuadrículas Premium, VIP o Emprendedor</h3><p>Tu imagen comercial al lado de tus artistas preferidos, con exposición fija por 3, 6 o 12 meses.</p><span>Consultar</span></div>
-        <div class="plan"><h3>Ficha básica</h3><p>Nombre, categoría, horario, contacto y foto en el directorio.</p><span>Consultar</span></div>
-        <div class="plan"><h3>Ficha destacada</h3><p>Aparece en la portada, con publicaciones fijadas y campañas en la agenda.</p><span>Consultar</span></div>
-      </div>
-      <form class="form" id="altaForm">
-        <label>Nombre del negocio o artista<input name="nombre" required /></label>
-        <label>Categoría
-          <select name="categoria" required>
-            <option>Artista</option><option>Café y comida</option><option>Servicios</option><option>Salud y bienestar</option>
-            <option>Eventos y cultura</option><option>Tiendas</option><option>Educación</option><option>Otro</option>
-          </select>
-        </label>
-        <label>WhatsApp<input name="whatsapp" required placeholder="+58" /></label>
-        <label>Dirección o ciudad<input name="direccion" placeholder="Ej. Av. principal, Mérida" /></label>
-        <label class="ancho">Descripción corta<textarea name="descripcion" placeholder="Qué haces, qué ofreces, horario"></textarea></label>
-        <button class="btn lleno" type="submit">Enviar por WhatsApp</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- ============ CONTACTO ============ -->
+  <!-- ============ CIERRE: ANÚNCIATE Y CONTACTO ============ -->
   <section class="bloque wrap" id="contacto">
     <div class="contacto">
       <div>
-        <h2>Hablemos</h2>
-        <p>Publicidad, saludos o información general.</p>
-        <p>O escribe a <a href={`mailto:${sitio.correo}`}>{sitio.correo}</a></p>
+        <h2>Pon tu negocio, tu evento o tu música</h2>
+        <p>Publicidad, saludos o información general. Escríbenos a <a href={`mailto:${sitio.correo}`}>{sitio.correo}</a></p>
       </div>
-      <a class="btn lleno" href={wa()} target="_blank" rel="noopener">WhatsApp · {sitio.whatsappTexto}</a>
+      <div class="hero-acc">
+        <a class="btn" href="/anunciate/">Cómo anunciarte</a>
+        <a class="btn lleno" href={wa()} target="_blank" rel="noopener">WhatsApp · {sitio.whatsappTexto}</a>
+      </div>
     </div>
   </section>
 
-  <script is:inline define:vars={{ numero: sitio.whatsapp }}>
+  <script is:inline>
     // Oculta eventos y saludos vencidos
     const hoyAg = new Date().toISOString().slice(0, 10);
     document.querySelectorAll('[data-vence]').forEach((el) => { if (el.dataset.vence < hoyAg) el.remove(); });
-    // Formulario -> mensaje de WhatsApp
-    document.getElementById('altaForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const f = new FormData(this);
-      const msg = 'Hola, quiero dar de alta una ficha en iNteractiva.\n' +
-        `Nombre: ${f.get('nombre')}\nCategoría: ${f.get('categoria')}\nWhatsApp: ${f.get('whatsapp')}\n` +
-        `Dirección: ${f.get('direccion') || '-'}\nDescripción: ${f.get('descripcion') || '-'}`;
-      window.open(`https://wa.me/${numero}?text=` + encodeURIComponent(msg), '_blank', 'noopener');
-    });
   </script>
 </Base>

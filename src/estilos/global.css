@@ -35,6 +35,8 @@ header{position:sticky;top:0;z-index:40;background:rgba(10,11,30,.85);backdrop-f
 .btn.lleno{background:var(--cyan);color:#06121a}
 .btn.lleno:hover{background:#fff;border-color:#fff}
 
+.atajos{display:none}
+
 /* ---------- Portada ---------- */
 .hero{position:relative;padding:56px 0 40px;overflow:hidden;isolation:isolate}
 .hero::before{content:"";position:absolute;inset:0;z-index:-1;background:
@@ -141,11 +143,13 @@ section.bloque{padding:52px 0 6px}
 .fila .h{text-align:right;font-size:.84rem;font-weight:700;color:var(--cyan);white-space:nowrap}
 
 /* Empresas */
-.directorio{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.directorio{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
 .neg{display:flex;flex-direction:column;gap:3px;padding:20px 22px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);transition:.2s}
 .neg:hover{border-color:var(--cyan);transform:translateY(-3px)}
 .neg strong{font-size:1.1rem}.neg small{color:var(--mut);font-size:.82rem}
 .neg.libre{background:none;border-style:dashed}
+.neg-enl{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:.84rem;font-weight:700;color:var(--cyan)}
+.neg-enl a:hover{text-decoration:underline}
 
 .nosotros p{max-width:70ch;color:#d5d7f3;margin-top:10px}
 .nosotros p:first-of-type{font-size:1.35rem;font-weight:700;font-style:italic;color:var(--txt)}
@@ -199,7 +203,11 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
 
 /* ---------- Adaptación a pantallas ---------- */
 @media (max-width:980px){
-  .menu{display:none}.nav{justify-content:space-between}
+  .menu{display:none}.nav{justify-content:space-between;height:64px}
+  .atajos{display:flex;gap:8px;overflow-x:auto;padding:0 20px 10px;scrollbar-width:none}
+  .atajos::-webkit-scrollbar{display:none}
+  .atajos a{flex:none;padding:6px 14px;border:1px solid var(--line);border-radius:999px;font-size:.8rem;font-weight:600;color:var(--mut)}
+  html{scroll-padding-top:120px}
   .hero-grid,.noticias,.anuncio{grid-template-columns:1fr}
   .escena{height:350px}.a0{height:340px}.a1,.a2{height:230px}.a3{height:100px}
   .trio,.agenda,.directorio{grid-template-columns:1fr}
@@ -208,7 +216,15 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
 }
 @media (max-width:600px){
   .hero{padding-top:34px}.escena{height:290px}.a0{height:285px}.a1,.a2{height:200px;top:40px}.a3{display:none}
-  .esp-fila,.form{grid-template-columns:1fr}
+  .form{grid-template-columns:1fr}
+  .esp-fila{gap:12px;margin-top:26px}.espacio,.esp-item{min-height:112px}
+  .esp-item{padding:14px}.esp-libre strong{font-size:.92rem}.esp-item small{font-size:.7rem}
+  section.bloque{padding-top:38px}
+  /* En celular las tarjetas se deslizan de lado en vez de apilarse (página más corta) */
+  .desliza{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:-20px;padding-inline:20px;scroll-padding-inline:20px;scrollbar-width:none}
+  .desliza::-webkit-scrollbar{display:none}
+  .desliza>*{flex:0 0 74%;scroll-snap-align:start}
+  .ficha{min-height:200px}
   .marca-txt strong{font-size:.95rem}.marca-txt small{font-size:.58rem}
   .nav .btn{padding:9px 13px;font-size:.76rem}
   .dock{flex-wrap:wrap;gap:8px 14px;padding:8px 14px}

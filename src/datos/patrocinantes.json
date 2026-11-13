@@ -1,12 +1,22 @@
 {
   "rotacionSegundos": 6,
   "espacios": {
-    "vip": { "titulo": "Apartado VIP", "etiqueta": "VIP" },
-    "premium": { "titulo": "Apartado PREMIUM", "etiqueta": "PREMIUM" },
-    "franja": { "titulo": "Empresas que nos acompañan", "casillasLibres": 3 },
-    "directorio": { "titulo": "Negocios de Mérida" }
+    "vip": {
+      "titulo": "Apartado VIP",
+      "etiqueta": "VIP"
+    },
+    "premium": {
+      "titulo": "Apartado PREMIUM",
+      "etiqueta": "PREMIUM"
+    },
+    "franja": {
+      "titulo": "Empresas que nos acompañan",
+      "casillasLibres": 2
+    },
+    "directorio": {
+      "titulo": "Negocios de Mérida"
+    }
   },
-  "categoriasLibres": ["Servicios", "Salud y bienestar", "Eventos y cultura", "Tiendas"],
   "patrocinantes": [
     {
       "id": "hierro-y-grano",
@@ -15,10 +25,16 @@
       "nivel": "VIP",
       "logo": "/img/patrocinantes/hierro-y-grano.jpg",
       "enlace": "https://www.instagram.com/hierroygrano/",
-      "espacios": ["franja", "directorio"],
+      "espacios": [
+        "franja",
+        "directorio"
+      ],
       "desde": "",
       "hasta": "",
-      "activo": true
+      "activo": true,
+      "lema": "",
+      "direccion": "",
+      "video": ""
     },
     {
       "id": "masa-madre",
@@ -27,7 +43,31 @@
       "nivel": "Premium",
       "logo": "/img/patrocinantes/masa-madre.jpg",
       "enlace": "https://www.instagram.com/masamiadre/",
-      "espacios": ["franja", "directorio"],
+      "espacios": [
+        "franja",
+        "directorio"
+      ],
+      "desde": "",
+      "hasta": "",
+      "activo": true,
+      "lema": "",
+      "direccion": "",
+      "video": ""
+    },
+    {
+      "id": "lili-xiaohua",
+      "nombre": "LiLi XiaoHua",
+      "categoria": "Supermercado",
+      "nivel": "",
+      "lema": "Los Expertos en Economía",
+      "direccion": "Av. 2, entre calles 21 y 22, Centro, Mérida",
+      "logo": "/img/patrocinantes/lili-xiaohua.jpg",
+      "enlace": "https://www.instagram.com/lilixiaohua.ve/",
+      "video": "https://www.instagram.com/reel/Dc9jh0iJh-S/",
+      "espacios": [
+        "franja",
+        "directorio"
+      ],
       "desde": "",
       "hasta": "",
       "activo": true

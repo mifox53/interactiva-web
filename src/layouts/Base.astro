@@ -13,7 +13,7 @@ const imagenAbs = new URL(imagen, Astro.site);
 const redes = Object.entries(sitio.redes).filter(([, enlace]) => enlace);
 const menu = [
   ['Noticias', '/#noticias'], ['Artistas', '/#artistas'], ['Agenda', '/#agenda'],
-  ['Programación', '/#programacion'], ['Empresas', '/#empresas'], ['Anúnciate', '/#anunciate'],
+  ['Programación', '/#programacion'], ['Empresas', '/#empresas'], ['Anúnciate', '/anunciate/'],
 ];
 ---
 <!DOCTYPE html>
@@ -45,6 +45,10 @@ const menu = [
       </nav>
       <a class="btn" href={wa()} target="_blank" rel="noopener">Contáctanos</a>
     </div>
+    <!-- Accesos rápidos: solo en celular y tablet, para saltar a una sección sin recorrer la página -->
+    <nav class="atajos" aria-label="Secciones">
+      {menu.map(([texto, href]) => <a href={href}>{texto}</a>)}
+    </nav>
   </header>
 
   <main><slot /></main>
