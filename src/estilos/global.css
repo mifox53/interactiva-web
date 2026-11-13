@@ -8,7 +8,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
-body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--txt);line-height:1.5;padding-bottom:96px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--txt);line-height:1.5;padding-bottom:116px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -185,7 +185,9 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
 .dock-info strong{display:block;font-size:.85rem}.dock-info small{font-size:.74rem;color:var(--mut);white-space:nowrap}
 .punto{width:10px;height:10px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 0 rgba(255,95,210,.7);animation:pulso 1.8s infinite}
 @keyframes pulso{to{box-shadow:0 0 0 12px rgba(255,95,210,0)}}
-.dock-widget{flex:1;min-width:0;max-height:76px;overflow:hidden}
+/* El widget de Caster es alto: se muestra solo su franja inferior, con los controles */
+.dock-widget{position:relative;width:min(380px,100%);height:88px;overflow:hidden;border-radius:10px;margin-left:auto}
+.dock-widget .cstrEmbed{position:absolute;left:0;right:0;bottom:0}
 .dock-widget .cstrEmbed>a{font-size:0}
 .dock-alt{font-size:.74rem;color:var(--mut);text-decoration:underline;white-space:nowrap}
 
@@ -228,8 +230,8 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
   .marca-txt strong{font-size:.95rem}.marca-txt small{font-size:.58rem}
   .nav .btn{padding:9px 13px;font-size:.76rem}
   .dock{flex-wrap:wrap;gap:8px 14px;padding:8px 14px}
-  .dock-widget{order:3;flex-basis:100%}
-  body{padding-bottom:150px}
+  .dock-widget{order:3;flex-basis:100%;width:100%;margin-left:0}
+  body{padding-bottom:170px}
   .noticia{grid-template-columns:92px 1fr}.noticia-img{height:76px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
