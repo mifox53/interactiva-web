@@ -1,6 +1,8 @@
 ---
 nombre: Liz
+genero: Merengue
 foto: /img/artistas/liz.jpg
 saludo: https://www.instagram.com/p/DcL3tmQtOZG/
-orden: 2
+instagram: lizcontigo
+seguidores: 272000
 ---

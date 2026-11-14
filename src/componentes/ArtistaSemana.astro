@@ -1,0 +1,55 @@
+---
+// Bloque "Artista de la semana" de la portada.
+// Se fija en src/datos/artista-semana.json; si no hay ninguno vigente, rota solo cada semana
+// entre los artistas con foto (el navegador recalcula el turno, así no depende de republicar el sitio).
+import datos from '../datos/artista-semana.json';
+import { artistaDeLaSemana, paginaArtista, instagramUrl, instagramUsuario, seguidoresCorto } from '../lib/util.js';
+
+const { artistas } = Astro.props;
+const elegido = artistaDeLaSemana(artistas, datos.semanas);
+const candidatos = artistas.filter((a) => a.data.foto).map((a) => ({
+  id: a.id, nombre: a.data.nombre, foto: a.data.foto, tipo: a.data.tipo ?? '', genero: a.data.genero ?? '',
+  seguidores: a.data.seguidores ? seguidoresCorto(a.data.seguidores) : '', saludo: a.data.saludo ?? '',
+  instagram: instagramUrl(a.data.instagram), usuario: instagramUsuario(a.data.instagram), pagina: paginaArtista(a),
+}));
+const d = elegido?.artista.data;
+---
+{elegido && (
+  <div class="semana" data-semana data-fijado={elegido.fijado ? '1' : ''} data-hasta={elegido.hasta ?? ''}>
+    <a class="semana-foto" href={paginaArtista(elegido.artista)} style={`--g:url('${d.foto ?? ''}')`} aria-label={d.nombre}></a>
+    <div class="semana-txt">
+      <span class="k">Artista de la semana</span>
+      <h3><a href={paginaArtista(elegido.artista)}>{d.nombre}</a></h3>
+      <p class="semana-meta">{[d.tipo ? `Artista ${d.tipo}` : '', d.genero, d.seguidores ? `${seguidoresCorto(d.seguidores)} seguidores en Instagram` : ''].filter(Boolean).join(' · ')}</p>
+      {elegido.motivo && <p class="semana-motivo">{elegido.motivo}</p>}
+      <div class="hero-acc">
+        {d.saludo && <a class="btn lleno" href={d.saludo} target="_blank" rel="noopener" data-saludo>▶ Ver saludo</a>}
+        {d.instagram && <a class="btn" href={instagramUrl(d.instagram)} target="_blank" rel="noopener" data-ig>{instagramUsuario(d.instagram)}</a>}
+        <a class="btn" href={paginaArtista(elegido.artista)} data-pagina>Su página →</a>
+      </div>
+    </div>
+    <script type="application/json" id="artistas-semana" set:html={JSON.stringify(candidatos)}></script>
+  </div>
+)}
+<script is:inline>
+  // Si no hay un artista fijado para esta semana, el turno se calcula aquí con la fecha de hoy.
+  (function () {
+    const caja = document.querySelector('[data-semana]');
+    if (!caja) return;
+    const hoy = new Date().toISOString().slice(0, 10);
+    // Un artista fijado manda mientras su fecha "hasta" no haya pasado (aunque el sitio no se haya republicado)
+    if (caja.dataset.fijado && (!caja.dataset.hasta || caja.dataset.hasta >= hoy)) return;
+    caja.querySelector('.semana-motivo')?.remove();
+    const lista = JSON.parse(document.getElementById('artistas-semana').textContent);
+    if (lista.length < 2) return;
+    const semana = Math.floor((Date.now() - Date.UTC(2026, 0, 5)) / (7 * 864e5));
+    const a = lista[((semana % lista.length) + lista.length) % lista.length];
+    caja.querySelector('.semana-foto').style.setProperty('--g', `url('${a.foto}')`);
+    caja.querySelector('.semana-foto').href = a.pagina;
+    const h = caja.querySelector('h3 a'); h.textContent = a.nombre; h.href = a.pagina;
+    caja.querySelector('.semana-meta').textContent = [a.tipo ? `Artista ${a.tipo}` : '', a.genero, a.seguidores ? `${a.seguidores} seguidores en Instagram` : ''].filter(Boolean).join(' · ');
+    const s = caja.querySelector('[data-saludo]'); if (s) { if (a.saludo) s.href = a.saludo; else s.remove(); }
+    const ig = caja.querySelector('[data-ig]'); if (ig) { if (a.instagram) { ig.href = a.instagram; ig.textContent = a.usuario; } else ig.remove(); }
+    caja.querySelector('[data-pagina]').href = a.pagina;
+  })();
+</script>

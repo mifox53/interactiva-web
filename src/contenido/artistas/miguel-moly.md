@@ -1,6 +1,8 @@
 ---
 nombre: Miguel Moly
+genero: Merengue
 foto: /img/artistas/miguel-moly.jpg
 saludo: https://www.instagram.com/p/DWclHkmETXV/
-orden: 10
+instagram: miguelmoly
+seguidores: 717000
 ---

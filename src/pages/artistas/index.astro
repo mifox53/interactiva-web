@@ -1,0 +1,62 @@
+---
+// Galería completa de artistas, con filtros por tipo y género. Aquí caben todos, sin límite.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import FichaArtista from '../../componentes/FichaArtista.astro';
+import { wa, ordenarArtistas } from '../../lib/util.js';
+
+const artistas = ordenarArtistas(await getCollection('artistas'));
+const generos = [...new Set(artistas.map((a) => a.data.genero).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
+const hayLocales = artistas.some((a) => a.data.tipo === 'local');
+const hayInternacionales = artistas.some((a) => a.data.tipo === 'internacional');
+const hayTipos = hayLocales || hayInternacionales;
+---
+<Base titulo="Artistas" descripcion="Los artistas locales e internacionales que suenan en iNteractiva 89.7 FM, la radio de los artistas.">
+  <section class="bloque wrap">
+    <div class="cab"><h2>Artistas</h2></div>
+    <p class="bajada">Todos los artistas que suenan en la 89.7. Toca uno para ver su saludo, su Instagram y sus eventos.</p>
+
+    {(hayTipos || generos.length > 0) && (
+      <div class="filtros" data-filtros>
+        <button class="activo" data-f="">Todos <span>{artistas.length}</span></button>
+        {hayLocales && <button data-f="tipo:local">Locales</button>}
+        {hayInternacionales && <button data-f="tipo:internacional">Internacionales</button>}
+        {generos.map((g) => <button data-f={`genero:${g}`}>{g}</button>)}
+      </div>
+    )}
+
+    <div class="rejilla galeria" data-galeria>
+      {artistas.map((a, n) => <FichaArtista artista={a} n={n} />)}
+      <a class="ficha libre" href={wa('Hola, soy artista y quiero mi ficha en iNteractiva')} target="_blank" rel="noopener">
+        <span class="k">¿Eres artista?</span>
+        <strong>Tu ficha aquí</strong>
+        <small>Escríbenos por WhatsApp →</small>
+      </a>
+    </div>
+    <p class="vacio" data-sin-resultados hidden><strong>Nada por aquí todavía</strong><span>Prueba con otro filtro.</span></p>
+    <a class="volver" href="/">← Volver al inicio</a>
+  </section>
+
+  <script is:inline>
+    // Filtros: solo esconden y muestran fichas, sin recargar
+    (function () {
+      const barra = document.querySelector('[data-filtros]');
+      if (!barra) return;
+      const fichas = [...document.querySelectorAll('[data-galeria] .ficha:not(.libre)')];
+      const aviso = document.querySelector('[data-sin-resultados]');
+      barra.addEventListener('click', (e) => {
+        const b = e.target.closest('button');
+        if (!b) return;
+        barra.querySelectorAll('button').forEach((x) => x.classList.toggle('activo', x === b));
+        const [campo, valor] = b.dataset.f.split(':');
+        let visibles = 0;
+        fichas.forEach((f) => {
+          const ok = !campo || f.dataset[campo] === valor;
+          f.hidden = !ok;
+          if (ok) visibles++;
+        });
+        aviso.hidden = visibles > 0;
+      });
+    })();
+  </script>
+</Base>

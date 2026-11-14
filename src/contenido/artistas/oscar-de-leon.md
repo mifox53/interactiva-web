@@ -1,6 +1,8 @@
 ---
 nombre: Oscar D'León
+genero: Salsa
 foto: /img/artistas/oscar-de-leon.jpg
 saludo: https://www.instagram.com/p/DNRTG6-vgEG/
-orden: 3
+instagram: oscardleon
+seguidores: 2000000
 ---

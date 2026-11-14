@@ -3,17 +3,21 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import EspacioPatrocinante from '../componentes/EspacioPatrocinante.astro';
 import TarjetaNoticia from '../componentes/TarjetaNoticia.astro';
+import FichaArtista from '../componentes/FichaArtista.astro';
+import ArtistaSemana from '../componentes/ArtistaSemana.astro';
 import sitio from '../datos/sitio.json';
 import patro from '../datos/patrocinantes.json';
 import programacion from '../datos/programacion.json';
-import { wa, fechaLarga } from '../lib/util.js';
+import { wa, fechaLarga, ordenarArtistas, paginaArtista } from '../lib/util.js';
 
 // Noticias publicadas, la más reciente primero (la destacada sube al inicio)
 const noticias = (await getCollection('noticias', (n) => !n.data.borrador))
   .sort((a, b) => Number(b.data.destacada) - Number(a.data.destacada) || b.data.fecha - a.data.fecha)
   .slice(0, 5);
 
-const artistas = (await getCollection('artistas')).sort((a, b) => a.data.orden - b.data.orden);
+const artistas = ordenarArtistas(await getCollection('artistas'));
+// En la portada se muestran como máximo estos; el resto está en /artistas/
+const EN_PORTADA = 8;
 
 // Eventos y saludos publicados (el filtro por fecha se termina de aplicar en el navegador)
 const eventos = (await getCollection('eventos', (e) => !e.data.borrador)).sort((a, b) => a.data.fecha - b.data.fecha);
@@ -31,14 +35,17 @@ const huecos = [
 ];
 const etiquetaDe = (a) => (a.data.destacado ? 'Artista destacado' : a.data.tipo ? `Artista ${a.data.tipo}` : 'Artista');
 // Solo rotan en la portada los artistas que ya tienen foto
+// Las tarjetas de la portada llevan a la página del artista dentro del sitio (allí está su saludo e Instagram)
 const paraPortada = artistas.filter((a) => a.data.foto).map((a) => ({
-  etiqueta: etiquetaDe(a), nombre: a.data.nombre, foto: a.data.foto ?? '', enlace: a.data.saludo ?? '#artistas',
+  etiqueta: etiquetaDe(a), nombre: a.data.nombre, foto: a.data.foto ?? '', enlace: paginaArtista(a),
 }));
 const portada = [0, 1, 2, 3].map((i) => paraPortada[i] ?? { ...huecos[i], foto: '', enlace: '#artistas' });
 
 const franja = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('franja'));
 const directorio = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('directorio'));
-const fichasLibres = artistas.length % 4 === 0 ? 0 : 4 - (artistas.length % 4);
+// Primero los que ya tienen foto; los demás esperan en /artistas/ hasta que llegue la suya
+const enPortada = [...artistas.filter((a) => a.data.foto), ...artistas.filter((a) => !a.data.foto)].slice(0, EN_PORTADA);
+const fichasLibres = enPortada.length % 4 === 0 ? 0 : 4 - (enPortada.length % 4);
 ---
 <Base>
   <!-- ============ PORTADA ============ -->
@@ -57,7 +64,7 @@ const fichasLibres = artistas.length % 4 === 0 ? 0 : 4 - (artistas.length % 4);
         </div>
         <div class="escena" aria-label="Artistas de iNteractiva" data-portada>
           {portada.map((c, i) => (
-            <a class={`art a${i}`} href={c.enlace} target={c.enlace.startsWith('#') ? undefined : '_blank'} rel="noopener" data-degradado={degradados[i]}
+            <a class={`art a${i}`} href={c.enlace} target={c.enlace.startsWith('http') ? '_blank' : undefined} rel="noopener" data-degradado={degradados[i]}
                style={`--g:${c.foto ? `url('${c.foto}')` : degradados[i]}`}>
               <b><small>{c.etiqueta}</small><span>{c.nombre}</span></b>
             </a>
@@ -107,17 +114,11 @@ const fichasLibres = artistas.length % 4 === 0 ? 0 : 4 - (artistas.length % 4);
 
   <!-- ============ ARTISTAS ============ -->
   <section class="bloque wrap" id="artistas">
-    <div class="cab"><h2>Artistas</h2></div>
+    <div class="cab"><h2>Artistas</h2><a href="/artistas/">Ver todos ({artistas.length}) →</a></div>
     <p class="bajada">Artistas locales e internacionales que suenan en la 89.7.</p>
+    <ArtistaSemana artistas={artistas} />
     <div class="rejilla desliza">
-      {artistas.map((a, n) => (
-        <a class="ficha" href={a.data.saludo || a.data.enlace || a.data.instagram || wa(`Hola, quiero información sobre ${a.data.nombre} en iNteractiva`)}
-           target="_blank" rel="noopener" style={`--g:${a.data.foto ? `url('${a.data.foto}')` : degradados[n % degradados.length]}`}>
-          <span class="k">{a.data.tipo ? `Artista ${a.data.tipo}` : 'Artista'}</span>
-          <strong>{a.data.nombre}</strong>
-          {a.data.saludo && <small>▶ Ver saludo</small>}
-        </a>
-      ))}
+      {enPortada.map((a, n) => <FichaArtista artista={a} n={n} />)}
       {Array.from({ length: fichasLibres }).map((_, i) => (
         <a class="ficha libre" href={wa('Hola, soy artista y quiero mi ficha en iNteractiva')} target="_blank" rel="noopener">
           <span class="k">{i % 2 ? 'Artista internacional' : 'Artista local'}</span>
@@ -126,6 +127,7 @@ const fichasLibres = artistas.length % 4 === 0 ? 0 : 4 - (artistas.length % 4);
         </a>
       ))}
     </div>
+    {artistas.length > EN_PORTADA && <p class="mas"><a class="btn" href="/artistas/">Ver los {artistas.length} artistas →</a></p>}
   </section>
 
   <!-- ============ AGENDA: EVENTOS Y SALUDOS ============ -->
@@ -236,7 +238,7 @@ const fichasLibres = artistas.length % 4 === 0 ? 0 : 4 - (artistas.length % 4);
           const a = todos[i];
           el.style.setProperty('--g', a.foto ? `url('${a.foto}')` : el.dataset.degradado);
           el.href = a.enlace;
-          if (a.enlace.startsWith('#')) el.removeAttribute('target'); else el.target = '_blank';
+          if (a.enlace.startsWith('http')) el.target = '_blank'; else el.removeAttribute('target');
           el.querySelector('small').textContent = a.etiqueta;
           el.querySelector('span').textContent = a.nombre;
         });

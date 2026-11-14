@@ -240,3 +240,41 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
   .noticia{grid-template-columns:92px 1fr}.noticia-img{height:76px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+
+/* ---------- Artistas: seguidores, filtros, artista de la semana, página de artista ---------- */
+.ficha .seg{position:absolute;top:14px;right:14px;z-index:2;font-size:.64rem;font-weight:800;letter-spacing:.04em;padding:4px 10px;border-radius:999px;background:rgba(10,11,30,.72);border:1px solid var(--line);color:var(--txt);backdrop-filter:blur(6px)}
+.mas{margin-top:22px;display:flex;justify-content:center}
+.filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.filtros button{padding:7px 14px;border:1px solid var(--line);border-radius:999px;font-size:.8rem;font-weight:600;color:var(--mut);transition:.2s}
+.filtros button span{color:var(--cyan);margin-left:4px}
+.filtros button:hover{color:var(--txt);border-color:var(--cyan)}
+.filtros button.activo{background:var(--cyan);border-color:var(--cyan);color:#06121a}
+.filtros button.activo span{color:#06121a}
+.galeria{display:grid}
+.semana{display:grid;grid-template-columns:minmax(220px,.9fr) 1.6fr;gap:0;margin-bottom:22px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:linear-gradient(100deg,rgba(255,95,210,.16),rgba(139,61,255,.22) 55%,rgba(25,224,230,.1)),var(--card)}
+.semana-foto{display:block;min-height:300px;background:var(--g) center top/cover no-repeat;transition:.3s}
+.semana-foto:hover{transform:scale(1.02)}
+.semana-txt{padding:26px 28px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.semana-txt .k{color:var(--pink)}
+.semana-txt h3{font-size:clamp(1.6rem,3vw,2.3rem);font-weight:800;font-style:italic;line-height:1.05;letter-spacing:-.02em}
+.semana-meta{color:#d5d7f3;font-size:.92rem}
+.semana-motivo{color:var(--mut);font-size:.88rem}
+.semana-txt .hero-acc{margin-top:8px}
+.perfil{display:grid;grid-template-columns:minmax(240px,.8fr) 1.4fr;gap:34px;padding:44px 0 0;align-items:start}
+.perfil-foto{aspect-ratio:4/5;border-radius:var(--r);border:1px solid var(--line);background:var(--g) center top/cover no-repeat;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.perfil h1{font-size:clamp(2rem,4.5vw,3.4rem);line-height:1.02;margin:8px 0 10px}
+.perfil .meta{color:var(--mut);font-size:.9rem;margin-bottom:16px}
+.perfil .cuerpo{margin-top:24px;color:#e4e6ff;font-size:1.02rem;max-width:62ch}
+.perfil .cuerpo p{margin-bottom:1em}
+.perfil-agenda{display:grid;gap:12px;margin-top:26px}
+.perfil-cta{margin-top:26px;padding:16px 18px;border:1px dashed var(--line);border-radius:14px;font-size:.88rem;color:var(--mut)}
+.perfil-cta a{color:var(--cyan);font-weight:700}
+@media (max-width:980px){
+  .semana{grid-template-columns:1fr}.semana-foto{min-height:260px}
+  .perfil{grid-template-columns:1fr;gap:22px}.perfil-foto{aspect-ratio:4/3;max-height:380px}
+}
+@media (max-width:600px){
+  .galeria{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-inline:0;padding-inline:0}
+  .galeria .ficha{min-height:180px;padding:14px}.galeria .ficha strong{font-size:.95rem}
+  .semana-txt{padding:20px}
+}
