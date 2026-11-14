@@ -1,0 +1,18 @@
+---
+// Tarjeta de un artista. Enlaza a su página dentro del sitio (/artistas/<archivo>/).
+import { paginaArtista, seguidoresCorto } from '../lib/util.js';
+const { artista, n = 0 } = Astro.props;
+const d = artista.data;
+const degradados = [
+  'linear-gradient(160deg,#ff5fd2,#5b1fd6)', 'linear-gradient(160deg,#8b3dff,#161a55)',
+  'linear-gradient(160deg,#19e0e6,#2a2fb8)', 'linear-gradient(160deg,#ff7a3d,#b01f8f)',
+];
+const etiqueta = [d.tipo ? `Artista ${d.tipo}` : 'Artista', d.genero].filter(Boolean).join(' · ');
+---
+<a class="ficha" href={paginaArtista(artista)} data-tipo={d.tipo ?? ''} data-genero={d.genero ?? ''}
+   style={`--g:${d.foto ? `url('${d.foto}')` : degradados[n % degradados.length]}`}>
+  {d.seguidores ? <span class="seg">{seguidoresCorto(d.seguidores)} seguidores</span> : null}
+  <span class="k">{etiqueta}</span>
+  <strong>{d.nombre}</strong>
+  {d.saludo && <small>▶ Ver saludo</small>}
+</a>

@@ -12,7 +12,8 @@ para cambiar algo casi siempre se toca **un solo archivo pequeño**.
 | Patrocinantes: agregar, quitar, rotar, fechas, espacio que ocupan | `src/datos/patrocinantes.json` |
 | Programación | `src/datos/programacion.json` |
 | Noticias | un archivo `.md` por noticia en `src/contenido/noticias/` |
-| Artistas | un archivo `.md` por artista en `src/contenido/artistas/` (`saludo` = enlace a su video de saludo) |
+| Artistas | un archivo `.md` por artista en `src/contenido/artistas/` (ver sección Artistas) |
+| Artista de la semana | `src/datos/artista-semana.json` |
 | Eventos y saludos | un archivo `.md` por evento en `src/contenido/eventos/` |
 | Texto de "Nosotros" | `src/datos/sitio.json` → `nosotros` |
 | Planes y formulario de anunciantes | `src/pages/anunciate.astro` |
@@ -28,19 +29,27 @@ Los archivos `_plantilla.md` son modelos para copiar; no se publican.
 - Una noticia o evento con `borrador: true` no aparece en el sitio. Se publica al cambiarlo a `false`.
 - Lo pagado lleva `patrocinado: true` y sale con la etiqueta "Patrocinado".
 
-## Artistas en la portada
+## Artistas
 
-La portada muestra 4 artistas. Si hay más de 4 artistas con foto, cada día salen 4 distintos
-elegidos al azar (los mismos para todos los visitantes ese día). Para agregar uno: una foto en
-`public/img/artistas/` y un archivo `.md` en `src/contenido/artistas/` con `nombre`, `foto` y `saludo`.
-Para ver cómo saldrá otro día: `interactiva.com.ve/?fecha=2026-12-25`.
+Cada artista es un archivo `.md` en `src/contenido/artistas/` (modelo: `_plantilla.md`). Campos:
+`nombre`, `tipo` (local/internacional), `genero`, `foto`, `saludo` (enlace a su video de saludo),
+`instagram` (usuario sin @), `seguidores` (número), `orden` (solo para forzar a alguien arriba) y
+`destacado`. El texto debajo del `---` es una biografía corta opcional.
 
-## Artistas en la portada
+- **Orden**: por `orden` si se fijó; si no, de más a menos `seguidores`; luego por nombre.
+- **Portada (arriba)**: 4 artistas con foto, al azar, cambian cada 10 minutos (`MINUTOS` en `src/pages/index.astro`).
+- **Artista de la semana**: bloque grande en la sección Artistas de la portada. Se fija en
+  `src/datos/artista-semana.json` (artista, desde, hasta, motivo). Si no hay ninguno vigente, rota solo
+  cada semana por turnos entre los artistas con foto.
+- **Sección Artistas de la portada**: muestra como máximo 8 (`EN_PORTADA`), primero los que tienen foto.
+- **Galería completa** `/artistas/`: todos, con filtros por tipo y género. Géneros usados:
+  Salsa, Merengue, Llanera y criolla, Rock, Pop y balada, Urbano, Tropical, Flamenco.
+- **Página por artista** `/artistas/<archivo>/`: foto, saludo, Instagram, seguidores, biografía y sus
+  eventos de la agenda (los eventos se enlazan por el campo `artista` con el mismo nombre). Ese enlace
+  es el que cada artista puede compartir en sus redes.
 
-La portada muestra 4 artistas. Si hay más de 4 en `src/contenido/artistas/`, se eligen 4 al azar
-y la selección cambia sola cada 10 minutos (el valor `MINUTOS` en `src/pages/index.astro`).
-Solo rotan los artistas que tienen foto. Para sumar un artista basta crear su
-archivo `.md` con `nombre`, `foto` y `saludo`; las fotos van en `public/img/artistas/`, mejor verticales.
+Las fotos van en `public/img/artistas/`, verticales y de menos de 200 KB. Un artista sin foto aparece en
+la galería con un fondo de color, pero no entra en la portada hasta tener foto.
 
 ## Patrocinantes
 

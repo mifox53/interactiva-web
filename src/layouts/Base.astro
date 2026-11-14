@@ -12,7 +12,7 @@ const url = new URL(Astro.url.pathname, Astro.site);
 const imagenAbs = new URL(imagen, Astro.site);
 const redes = Object.entries(sitio.redes).filter(([, enlace]) => enlace);
 const menu = [
-  ['Noticias', '/#noticias'], ['Artistas', '/#artistas'], ['Agenda', '/#agenda'],
+  ['Noticias', '/#noticias'], ['Artistas', '/artistas/'], ['Agenda', '/#agenda'],
   ['Programación', '/#programacion'], ['Empresas', '/#empresas'], ['Anúnciate', '/anunciate/'],
 ];
 ---

@@ -1,0 +1,6 @@
+{
+  "_ayuda": "Artista de la semana en la portada. Cada entrada: artista = nombre del archivo en src/contenido/artistas/ sin .md; desde/hasta = fechas 2026-12-31 (vacío = sin límite); motivo = texto corto opcional (por ejemplo 'Semana especial del artista iNteractivo'). Si ninguna entrada está vigente, el sitio elige uno distinto cada semana por turnos entre los que tienen foto.",
+  "semanas": [
+    { "artista": "grupo-niche", "desde": "2026-11-09", "hasta": "2026-11-15", "motivo": "Semana especial del artista iNteractivo · Marathon MP4" }
+  ]
+}

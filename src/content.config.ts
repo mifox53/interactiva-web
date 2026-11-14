@@ -27,12 +27,18 @@ const artistas = defineCollection({
   schema: z.object({
     nombre: z.string(),
     tipo: z.enum(['local', 'internacional']).optional(),
+    // Género musical, libre: "Salsa", "Merengue", "Música llanera"... Sirve para filtrar en /artistas/
+    genero: z.string().optional(),
     foto: z.string().optional(),
     // Enlace al video de saludo del artista (por ejemplo, la publicación en Instagram)
     saludo: z.string().url().optional(),
     destacado: z.boolean().default(false),
+    // Orden en las listas: menor primero. Si no se indica, se ordena por seguidores.
     orden: z.number().default(100),
+    // Usuario de Instagram sin @ (por ejemplo "lizcontigo") o el enlace completo
     instagram: z.string().optional(),
+    // Seguidores en Instagram al momento de revisarlo (número entero, por ejemplo 272000)
+    seguidores: z.number().int().nonnegative().optional(),
     enlace: z.string().optional(),
   }),
 });

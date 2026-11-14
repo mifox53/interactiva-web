@@ -1,0 +1,71 @@
+---
+// Página de cada artista: /artistas/<archivo>/. El artista puede compartir este enlace en sus redes.
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import FichaArtista from '../../componentes/FichaArtista.astro';
+import { wa, fechaLarga, instagramUrl, instagramUsuario, seguidoresCorto, ordenarArtistas } from '../../lib/util.js';
+
+export async function getStaticPaths() {
+  const artistas = await getCollection('artistas');
+  return artistas.map((artista) => ({ params: { id: artista.id }, props: { artista } }));
+}
+const { artista } = Astro.props;
+const d = artista.data;
+const { Content } = await render(artista);
+const tieneTexto = (artista.body ?? '').trim().length > 0;
+
+// Eventos y saludos de este artista (por nombre, tal como está en el campo `artista` del evento)
+const eventos = (await getCollection('eventos', (e) => !e.data.borrador && e.data.artista &&
+  e.data.artista.trim().toLowerCase() === d.nombre.trim().toLowerCase())).sort((a, b) => a.data.fecha - b.data.fecha);
+
+const otros = ordenarArtistas((await getCollection('artistas')).filter((a) => a.id !== artista.id)).slice(0, 4);
+const etiqueta = [d.tipo ? `Artista ${d.tipo}` : 'Artista', d.genero].filter(Boolean).join(' · ');
+const descripcion = `${d.nombre} en iNteractiva 89.7 FM, la radio de los artistas.${d.genero ? ` ${d.genero}.` : ''}`;
+---
+<Base titulo={d.nombre} descripcion={descripcion} imagen={d.foto || undefined}>
+  <article class="wrap perfil">
+    <div class="perfil-foto" style={`--g:${d.foto ? `url('${d.foto}')` : 'linear-gradient(160deg,#8b3dff,#161a55)'}`}></div>
+    <div class="perfil-txt">
+      <span class="k">{etiqueta}</span>
+      <h1>{d.nombre}</h1>
+      {d.seguidores ? <p class="meta">{seguidoresCorto(d.seguidores)} seguidores en Instagram</p> : null}
+      <div class="hero-acc">
+        {d.saludo && <a class="btn lleno" href={d.saludo} target="_blank" rel="noopener">▶ Ver saludo</a>}
+        {d.instagram && <a class="btn" href={instagramUrl(d.instagram)} target="_blank" rel="noopener">{instagramUsuario(d.instagram)}</a>}
+        {d.enlace && <a class="btn" href={d.enlace} target="_blank" rel="noopener">Sitio del artista</a>}
+      </div>
+      {tieneTexto && <div class="cuerpo"><Content /></div>}
+
+      {eventos.length > 0 && (
+        <div class="perfil-agenda">
+          <span class="k">Agenda y saludos</span>
+          {eventos.map((e) => (
+            <a class="evento" href={e.data.enlace || undefined} target="_blank" rel="noopener"
+               data-vence={(e.data.hasta ?? e.data.fecha).toISOString().slice(0, 10)}>
+              <span class="dia">{e.data.tipo === 'saludo' ? 'Saludo' : fechaLarga(e.data.fecha)}</span>
+              <h3>{e.data.titulo}</h3>
+              {e.data.lugar && <p>{e.data.lugar}</p>}
+            </a>
+          ))}
+        </div>
+      )}
+
+      <p class="perfil-cta">
+        ¿Eres {d.nombre} o parte de su equipo? <a href={wa(`Hola, escribo de parte de ${d.nombre}. Quiero actualizar la ficha o publicar un evento en iNteractiva`)} target="_blank" rel="noopener">Actualiza tu ficha o publica un evento →</a>
+      </p>
+    </div>
+  </article>
+
+  {otros.length > 0 && (
+    <section class="bloque wrap">
+      <div class="cab"><h2>Más artistas</h2><a href="/artistas/">Ver todos →</a></div>
+      <div class="rejilla desliza">{otros.map((a, n) => <FichaArtista artista={a} n={n} />)}</div>
+      <a class="volver" href="/">← Volver al inicio</a>
+    </section>
+  )}
+
+  <script is:inline>
+    const hoyAg = new Date().toISOString().slice(0, 10);
+    document.querySelectorAll('[data-vence]').forEach((el) => { if (el.dataset.vence < hoyAg) el.remove(); });
+  </script>
+</Base>
