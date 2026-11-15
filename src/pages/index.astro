@@ -5,6 +5,7 @@ import EspacioPatrocinante from '../componentes/EspacioPatrocinante.astro';
 import TarjetaNoticia from '../componentes/TarjetaNoticia.astro';
 import FichaArtista from '../componentes/FichaArtista.astro';
 import ArtistaSemana from '../componentes/ArtistaSemana.astro';
+import Vitrina from '../componentes/Vitrina.astro';
 import sitio from '../datos/sitio.json';
 import patro from '../datos/patrocinantes.json';
 import programacion from '../datos/programacion.json';
@@ -150,6 +151,13 @@ const fichasLibres = enPortada.length % 4 === 0 ? 0 : 4 - (enPortada.length % 4)
         <span>Envíalo por WhatsApp y lo publicamos →</span>
       </a>
     </div>
+  </section>
+
+  <!-- ============ VITRINA: videos de emprendedores (se llena solo desde Instagram) ============ -->
+  <section class="bloque wrap" id="vitrina">
+    <div class="cab"><h2>Vitrina</h2><a href="/vitrina/">Ver todos →</a></div>
+    <p class="bajada">Emprendedores y empresas que presentamos en nuestras redes.</p>
+    <Vitrina max={sitio.vitrina.enPortada} />
   </section>
 
   <!-- ============ PROGRAMACIÓN ============ -->
