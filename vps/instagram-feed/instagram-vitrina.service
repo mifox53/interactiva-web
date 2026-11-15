@@ -1,0 +1,9 @@
+[Unit]
+Description=Vitrina de iNteractiva: actualiza los videos de Instagram para la web
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/etc/instagram-vitrina.env
+ExecStart=/usr/bin/python3 /opt/instagram-vitrina/actualizar_vitrina.py

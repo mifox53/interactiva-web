@@ -22,6 +22,10 @@
     "estado": "https://interactiva.duckdns.org/status-json.xsl",
     "paginaAlterna": "https://interactiva.duckdns.org/live"
   },
+  "vitrina": {
+    "feed": "https://interactiva.duckdns.org/feed/vitrina.json",
+    "enPortada": 4
+  },
   "analitica": {
     "goatcounter": ""
   },

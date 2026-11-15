@@ -1,0 +1,87 @@
+---
+// Vitrina: videos de emprendedores y empresas tomados solos del Instagram de la emisora.
+// El VPS deja la lista en sitio.vitrina.feed cada 30 minutos (ver vps/instagram-feed/README.md);
+// aquí el navegador la lee y dibuja las tarjetas. Nadie tiene que tocar la web para publicar.
+//   max: cuántos videos mostrar (en la portada, sitio.vitrina.enPortada).
+import sitio from '../datos/sitio.json';
+import { wa } from '../lib/util.js';
+
+const { max = 24 } = Astro.props;
+const feed = sitio.vitrina?.feed ?? '';
+---
+<div class="vitrina-caja" data-vitrina data-feed={feed} data-max={max}>
+  <div class="vitrina desliza" data-vitrina-lista></div>
+  <div class="vacio" data-vitrina-vacio hidden>
+    <strong>Muy pronto</strong>
+    <span>Aquí aparecerán los videos de emprendedores y empresas que presentamos en nuestras redes.</span>
+    <a class="btn" href={wa('Hola, quiero que mi negocio aparezca en la vitrina de iNteractiva')} target="_blank" rel="noopener">Quiero aparecer aquí →</a>
+  </div>
+</div>
+
+<script is:inline>
+(() => {
+  document.querySelectorAll('[data-vitrina]').forEach(async (caja) => {
+    const lista = caja.querySelector('[data-vitrina-lista]');
+    const vacio = caja.querySelector('[data-vitrina-vacio]');
+    const max = Number(caja.dataset.max) || 24;
+    const seguro = (u) => (typeof u === 'string' && u.startsWith('https://') ? u : '');
+    // Texto del post sin los hashtags del final, para que se lea limpio
+    const limpiar = (t) => (t || '').replace(/(\s*#[\p{L}\p{N}_]+)+\s*$/u, '').trim();
+    const fecha = new Intl.DateTimeFormat('es-VE', { day: 'numeric', month: 'short' });
+
+    let pubs = [];
+    try {
+      if (!caja.dataset.feed) throw new Error('sin feed');
+      const res = await fetch(caja.dataset.feed, { cache: 'no-cache' });
+      pubs = ((await res.json()).publicaciones || []).slice(0, max);
+    } catch (e) { pubs = []; }
+
+    if (!pubs.length) { vacio.hidden = false; return; }
+
+    for (const p of pubs) {
+      const enlace = seguro(p.enlace);
+      const video = seguro(p.video);
+      const imagen = seguro(p.imagen);
+      const tarjeta = document.createElement('article');
+      tarjeta.className = 'clip';
+
+      const marco = document.createElement('button');
+      marco.type = 'button';
+      marco.className = 'clip-marco';
+      marco.setAttribute('aria-label', video ? 'Reproducir video' : 'Ver publicación');
+      if (imagen) marco.style.backgroundImage = `url("${imagen}")`;
+      if (video) marco.insertAdjacentHTML('beforeend', '<span class="clip-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>');
+      marco.addEventListener('click', () => {
+        if (!video) { if (enlace) window.open(enlace, '_blank', 'noopener'); return; }
+        // Al tocar, se cambia la portada por el video (así la página no descarga videos que nadie ve)
+        const v = document.createElement('video');
+        v.src = video; v.controls = true; v.autoplay = true; v.playsInline = true;
+        if (imagen) v.poster = imagen;
+        v.className = 'clip-video';
+        // Si el enlace del video ya venció en Instagram, se abre la publicación original
+        v.addEventListener('error', () => { if (enlace) window.open(enlace, '_blank', 'noopener'); });
+        // Pausa los demás videos de la vitrina
+        v.addEventListener('play', () => document.querySelectorAll('.clip-video').forEach((o) => { if (o !== v) o.pause(); }));
+        marco.replaceWith(v);
+      }, { once: true });
+
+      const txt = document.createElement('div');
+      txt.className = 'clip-txt';
+      const cuando = document.createElement('span');
+      cuando.className = 'k';
+      cuando.textContent = p.fecha ? fecha.format(new Date(p.fecha)) : 'Vitrina';
+      const texto = document.createElement('p');
+      texto.textContent = limpiar(p.texto);
+      txt.append(cuando, texto);
+      if (enlace) {
+        const a = document.createElement('a');
+        a.href = enlace; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = 'Ver en Instagram →';
+        txt.append(a);
+      }
+      tarjeta.append(marco, txt);
+      lista.append(tarjeta);
+    }
+  });
+})();
+</script>

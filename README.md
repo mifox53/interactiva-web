@@ -15,6 +15,7 @@ para cambiar algo casi siempre se toca **un solo archivo pequeño**.
 | Artistas | un archivo `.md` por artista en `src/contenido/artistas/` (ver sección Artistas) |
 | Artista de la semana | `src/datos/artista-semana.json` |
 | Eventos y saludos | un archivo `.md` por evento en `src/contenido/eventos/` |
+| Vitrina (videos de emprendedores) | se llena sola desde Instagram; ver sección Vitrina |
 | Texto de "Nosotros" | `src/datos/sitio.json` → `nosotros` |
 | Planes y formulario de anunciantes | `src/pages/anunciate.astro` |
 | Colores y estilos | `src/estilos/global.css` |
@@ -54,6 +55,14 @@ Cada artista es un archivo `.md` en `src/contenido/artistas/` (modelo: `_plantil
 
 Las fotos van en `public/img/artistas/`, verticales y de menos de 200 KB. Un artista sin foto aparece en
 la galería con un fondo de color, pero no entra en la portada hasta tener foto.
+
+## Vitrina
+
+Videos de emprendedores y empresas que la emisora publica en Instagram. **No se edita en la web**:
+el VPS lee el Instagram cada 30 minutos y deja la lista en `sitio.json` → `vitrina.feed`
+(`https://interactiva.duckdns.org/feed/vitrina.json`). La portada muestra `vitrina.enPortada`
+videos y `/vitrina/` muestra todos. Si la lista no está disponible, sale "Muy pronto".
+Instalación, token y filtro por hashtag: `vps/instagram-feed/README.md`.
 
 ## Patrocinantes
 

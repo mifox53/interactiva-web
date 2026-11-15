@@ -1,0 +1,15 @@
+---
+// Página completa de la Vitrina: todos los videos recientes de emprendedores y empresas.
+import Base from '../layouts/Base.astro';
+import Vitrina from '../componentes/Vitrina.astro';
+import { wa } from '../lib/util.js';
+---
+<Base titulo="Vitrina" descripcion="Emprendedores y empresas de Mérida presentados en iNteractiva 89.7 FM.">
+  <section class="bloque wrap">
+    <div class="cab"><h2>Vitrina</h2></div>
+    <p class="bajada">Emprendedores, empresas y negocios que presentamos en nuestras redes. Toca un video para verlo.</p>
+    <Vitrina max={24} />
+    <p class="mas"><a class="btn" href={wa('Hola, quiero que mi negocio aparezca en la vitrina de iNteractiva')} target="_blank" rel="noopener">¿Quieres aparecer en la vitrina? →</a></p>
+    <a class="volver" href="/">← Volver al inicio</a>
+  </section>
+</Base>
