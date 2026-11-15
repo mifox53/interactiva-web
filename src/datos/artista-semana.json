@@ -1,6 +1,77 @@
 {
-  "_ayuda": "Artista de la semana en la portada. Cada entrada: artista = nombre del archivo en src/contenido/artistas/ sin .md; desde/hasta = fechas 2026-12-31 (vacío = sin límite); motivo = texto corto opcional (por ejemplo 'Semana especial del artista iNteractivo'). Si ninguna entrada está vigente, el sitio elige uno distinto cada semana por turnos entre los que tienen foto.",
+  "_ayuda": "Artista de la semana en la portada. Cada entrada: artista = nombre del archivo en src/contenido/artistas/ sin .md; desde/hasta = fechas 2026-12-31 (vacío = sin límite); motivo = texto corto opcional. Las semanas van de lunes a domingo. Si ninguna entrada está vigente, el sitio elige uno distinto cada semana por turnos entre los que tienen foto.",
   "semanas": [
-    { "artista": "grupo-niche", "desde": "2026-11-09", "hasta": "2026-11-15", "motivo": "Semana especial del artista iNteractivo · Marathon MP4" }
+    {
+      "artista": "grupo-niche",
+      "desde": "2026-11-09",
+      "hasta": "2026-11-15",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "luis-silva",
+      "desde": "2026-11-16",
+      "hasta": "2026-11-22",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "reynaldo-armas",
+      "desde": "2026-11-23",
+      "hasta": "2026-11-29",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "alejandro-palacio",
+      "desde": "2026-11-30",
+      "hasta": "2026-12-06",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "adolescentes-orquesta",
+      "desde": "2026-12-07",
+      "hasta": "2026-12-13",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "rummy-olivo",
+      "desde": "2026-12-14",
+      "hasta": "2026-12-20",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "ignacio-rondon",
+      "desde": "2026-12-21",
+      "hasta": "2026-12-27",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "scarlett-linares",
+      "desde": "2026-12-28",
+      "hasta": "2027-01-03",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "karolina-con-k",
+      "desde": "2027-01-04",
+      "hasta": "2027-01-10",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "desorden-publico",
+      "desde": "2027-01-11",
+      "hasta": "2027-01-17",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "magic-juan",
+      "desde": "2027-01-18",
+      "hasta": "2027-01-24",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    },
+    {
+      "artista": "grupo-niche",
+      "desde": "2027-01-25",
+      "hasta": "2027-01-31",
+      "motivo": "Semana especial del artista iNteractivo · Marathon MP4"
+    }
   ]
 }
