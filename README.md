@@ -36,7 +36,11 @@ Cada artista es un archivo `.md` en `src/contenido/artistas/` (modelo: `_plantil
 `instagram` (usuario sin @), `seguidores` (número), `orden` (solo para forzar a alguien arriba) y
 `destacado`. El texto debajo del `---` es una biografía corta opcional.
 
-- **Orden**: por `orden` si se fijó; si no, de más a menos `seguidores`; luego por nombre.
+- **Orden**: por `orden` si se fijó; luego los que tienen foto; luego de más a menos `seguidores`;
+  luego por nombre. Hoy tienen `orden` fijo los 11 primeros, en este orden: Liz, Reynaldo Armas,
+  Jessi Uribe & El Carteluo, Oscar D'León, Grupo Niche, Guaco, Rummy Olivo, Magic Juan, Miguel Moly,
+  Scarlett Linares y Los Melódicos. Para mover a alguien arriba, dale un `orden` menor; para sacarlo
+  de la lista fija, bórrale la línea `orden`. Los artistas sin foto quedan siempre de últimos.
 - **Portada (arriba)**: 4 artistas con foto, al azar, cambian cada 10 minutos (`MINUTOS` en `src/pages/index.astro`).
 - **Artista de la semana**: bloque grande en la sección Artistas de la portada. Se fija en
   `src/datos/artista-semana.json` (artista, desde, hasta, motivo). Si no hay ninguno vigente, rota solo
