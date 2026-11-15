@@ -18,9 +18,9 @@
     "tiktok": ""
   },
   "reproductor": {
-    "casterToken": "97b093c2-f3ef-441c-8318-be9aecd5adce",
-    "casterCanal": "a3315701-2053-4cf5-8f62-e2d9037068e1",
-    "paginaAlterna": "https://interactiva897.ismyradio.com"
+    "stream": "https://interactiva.duckdns.org/live",
+    "estado": "https://interactiva.duckdns.org/status-json.xsl",
+    "paginaAlterna": "https://interactiva.duckdns.org/live"
   },
   "analitica": {
     "goatcounter": ""
