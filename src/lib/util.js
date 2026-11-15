@@ -41,12 +41,13 @@ export function seguidoresCorto(n) {
 }
 
 /**
- * Orden de los artistas: primero por `orden` (si alguien lo fijó a mano), luego por seguidores
- * (de más a menos), luego por nombre.
+ * Orden de los artistas: primero por `orden` (si alguien lo fijó a mano), luego los que tienen foto,
+ * luego por seguidores (de más a menos) y por nombre. Así los que aún no tienen foto quedan al final.
  */
 export function ordenarArtistas(artistas) {
   return artistas.slice().sort((a, b) =>
     a.data.orden - b.data.orden ||
+    (b.data.foto ? 1 : 0) - (a.data.foto ? 1 : 0) ||
     (b.data.seguidores ?? -1) - (a.data.seguidores ?? -1) ||
     a.data.nombre.localeCompare(b.data.nombre, 'es'));
 }

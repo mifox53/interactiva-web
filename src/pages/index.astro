@@ -43,8 +43,8 @@ const portada = [0, 1, 2, 3].map((i) => paraPortada[i] ?? { ...huecos[i], foto: 
 
 const franja = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('franja'));
 const directorio = patro.patrocinantes.filter((p) => p.activo && p.espacios.includes('directorio'));
-// Primero los que ya tienen foto; los demás esperan en /artistas/ hasta que llegue la suya
-const enPortada = [...artistas.filter((a) => a.data.foto), ...artistas.filter((a) => !a.data.foto)].slice(0, EN_PORTADA);
+// ordenarArtistas ya deja de últimos a los que no tienen foto
+const enPortada = artistas.slice(0, EN_PORTADA);
 const fichasLibres = enPortada.length % 4 === 0 ? 0 : 4 - (enPortada.length % 4);
 ---
 <Base>

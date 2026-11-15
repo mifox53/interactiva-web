@@ -5,5 +5,6 @@ genero: Llanera y criolla
 foto: /img/artistas/jessi-uribe-el-carteluo.jpg
 saludo: https://www.instagram.com/interactiva89.7fm/reel/Dfmw3HZpucL/
 instagram: jessiuribe3
+orden: 3
 seguidores: 8000000
 ---
