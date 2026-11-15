@@ -1,17 +1,96 @@
 ---
-// Barra fija con la radio en vivo (widget de Caster.fm).
-// Los códigos del reproductor están en src/datos/sitio.json -> reproductor.
+// Barra fija con la radio en vivo: reproductor propio sobre el stream Icecast de la emisora.
+// La URL del stream y la del estado están en src/datos/sitio.json -> reproductor.
 import sitio from '../datos/sitio.json';
 const r = sitio.reproductor;
 ---
-<div class="dock" id="en-vivo">
+<div class="dock" id="en-vivo" data-stream={r.stream} data-estado={r.estado}>
   <div class="dock-info"><span class="punto"></span><div><strong>En vivo</strong><small>{sitio.nombre}</small></div></div>
-  <div class="dock-widget">
-    <div data-type="newStreamPlayer" data-publicToken={r.casterToken} data-theme="dark" data-color="19e0e6"
-         data-channelId={r.casterCanal} data-rendered="false" class="cstrEmbed">
-      <a href="https://www.caster.fm">Shoutcast Hosting</a> <a href="https://www.caster.fm">Stream Hosting</a> <a href="https://www.caster.fm">Radio Server Hosting</a>
+  <div class="dock-player">
+    <button class="dock-play" type="button" aria-label="Reproducir la radio" title="Reproducir">
+      <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+    </button>
+    <div class="dock-texto">
+      <span class="dock-estado">Pulsa play para escuchar</span>
+      <span class="dock-tema" aria-live="polite"></span>
     </div>
+    <label class="dock-vol" title="Volumen">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+      <input type="range" min="0" max="1" step="0.02" value="0.9" aria-label="Volumen">
+    </label>
   </div>
   <a class="dock-alt" href={r.paginaAlterna} target="_blank" rel="noopener">¿No se escucha? Ábrela aquí</a>
+  <audio preload="none" playsinline></audio>
 </div>
-<script is:inline src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
+
+<script is:inline>
+(() => {
+  const dock = document.getElementById('en-vivo');
+  if (!dock) return;
+  const stream = dock.dataset.stream;
+  const estadoUrl = dock.dataset.estado;
+  const audio = dock.querySelector('audio');
+  const boton = dock.querySelector('.dock-play');
+  const estado = dock.querySelector('.dock-estado');
+  const tema = dock.querySelector('.dock-tema');
+  const vol = dock.querySelector('.dock-vol input');
+
+  let volGuardado = null;
+  try { volGuardado = localStorage.getItem('radio-vol'); } catch (e) {}
+  if (volGuardado !== null) vol.value = volGuardado;
+  audio.volume = Number(vol.value);
+  vol.addEventListener('input', () => {
+    audio.volume = Number(vol.value);
+    try { localStorage.setItem('radio-vol', vol.value); } catch (e) {}
+  });
+
+  const poner = (txt, modo) => { estado.textContent = txt; dock.dataset.modo = modo || ''; };
+
+  function reproducir() {
+    // Se vuelve a cargar el stream en cada play para engancharse al directo y no a un buffer viejo.
+    audio.src = stream + (stream.includes('?') ? '&' : '?') + 'n=' + Date.now();
+    audio.load();
+    poner('Conectando…', 'cargando');
+    audio.play().catch(() => poner('No se pudo reproducir. Prueba el enlace de la derecha.', 'error'));
+  }
+  function detener() {
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+    poner('Pulsa play para escuchar', '');
+  }
+
+  boton.addEventListener('click', () => (audio.paused ? reproducir() : detener()));
+  audio.addEventListener('playing', () => { poner('Sonando en vivo', 'sonando'); boton.setAttribute('aria-label', 'Pausar'); boton.title = 'Pausar'; });
+  audio.addEventListener('pause', () => { boton.setAttribute('aria-label', 'Reproducir la radio'); boton.title = 'Reproducir'; });
+  audio.addEventListener('waiting', () => poner('Cargando…', 'cargando'));
+  audio.addEventListener('stalled', () => poner('Señal inestable…', 'cargando'));
+  audio.addEventListener('error', () => {
+    if (!audio.getAttribute('src')) return;
+    poner('La emisora está fuera del aire en este momento', 'error');
+  });
+
+  // Título de la canción y estado del servidor (Icecast status-json.xsl).
+  async function actualizarEstado() {
+    if (!estadoUrl) return;
+    try {
+      const res = await fetch(estadoUrl, { cache: 'no-store' });
+      const json = await res.json();
+      let fuentes = json && json.icestats ? json.icestats.source : null;
+      if (fuentes && !Array.isArray(fuentes)) fuentes = [fuentes];
+      const viva = (fuentes && fuentes.find(s => (s.listenurl || '').endsWith('/live'))) || (fuentes && fuentes[0]);
+      if (!viva) {
+        tema.textContent = '';
+        if (audio.paused) poner('Fuera del aire por ahora', 'fuera');
+        return;
+      }
+      const titulo = viva.title || viva.artist || '';
+      tema.textContent = titulo && !/live broadcast/i.test(titulo) ? '♪ ' + titulo : '';
+      if (audio.paused && dock.dataset.modo !== 'error') poner('Pulsa play para escuchar', '');
+    } catch (e) { /* sin estado no pasa nada: el play sigue funcionando */ }
+  }
+  actualizarEstado();
+  setInterval(actualizarEstado, 20000);
+})();
+</script>

@@ -189,10 +189,25 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
 .dock-info strong{display:block;font-size:.85rem}.dock-info small{font-size:.74rem;color:var(--mut);white-space:nowrap}
 .punto{width:10px;height:10px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 0 rgba(255,95,210,.7);animation:pulso 1.8s infinite}
 @keyframes pulso{to{box-shadow:0 0 0 12px rgba(255,95,210,0)}}
-/* El widget de Caster es alto: se muestra solo su franja inferior, con los controles */
-.dock-widget{position:relative;width:min(380px,100%);height:88px;overflow:hidden;border-radius:10px;margin-left:auto}
-.dock-widget .cstrEmbed{position:absolute;left:0;right:0;bottom:0}
-.dock-widget .cstrEmbed>a{font-size:0}
+/* Reproductor propio (stream Icecast de la emisora) */
+.dock-player{display:flex;align-items:center;gap:12px;margin-left:auto;width:min(440px,100%);padding:6px 10px 6px 6px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}
+.dock-play{flex:none;width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;background:var(--cyan);color:#06121a;transition:.2s;box-shadow:0 0 0 0 rgba(25,224,230,.5)}
+.dock-play:hover{transform:scale(1.06)}
+.dock-play svg{width:22px;height:22px;fill:currentColor}
+.dock-play .ico-pause{display:none}
+.dock[data-modo="sonando"] .dock-play .ico-play,.dock[data-modo="cargando"] .dock-play .ico-play{display:none}
+.dock[data-modo="sonando"] .dock-play .ico-pause,.dock[data-modo="cargando"] .dock-play .ico-pause{display:block}
+.dock[data-modo="sonando"] .dock-play{animation:pulso-cyan 1.8s infinite}
+.dock[data-modo="cargando"] .dock-play{opacity:.7}
+@keyframes pulso-cyan{to{box-shadow:0 0 0 12px rgba(25,224,230,0)}}
+.dock-texto{display:flex;flex-direction:column;min-width:0;flex:1;line-height:1.25}
+.dock-estado{font-size:.8rem;font-weight:700}
+.dock[data-modo="error"] .dock-estado,.dock[data-modo="fuera"] .dock-estado{color:var(--pink)}
+.dock-tema{font-size:.74rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dock-tema:empty{display:none}
+.dock-vol{display:flex;align-items:center;gap:6px;flex:none}
+.dock-vol svg{width:18px;height:18px;fill:var(--mut)}
+.dock-vol input{width:84px;accent-color:var(--cyan);cursor:pointer}
 .dock-alt{font-size:.74rem;color:var(--mut);text-decoration:underline;white-space:nowrap}
 
 /* ---------- Página de noticia ---------- */
@@ -221,6 +236,7 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
   .parrilla{grid-template-columns:1fr}
 }
 @media (max-width:600px){
+  .dock{gap:10px;padding:8px 12px;flex-wrap:wrap}.dock-player{width:100%;order:3}.dock-vol{display:none}.dock-alt{margin-left:auto}
   .hero{padding-top:34px}.escena{height:290px}.a1,.a2{height:265px}.a0,.a3{height:190px;top:60px}
   .art b{left:10px;right:6px;bottom:10px;font-size:.78rem}.art b small{font-size:.54rem}.a3 b{left:27%}.a0 b{right:27%}
   .form{grid-template-columns:1fr}
