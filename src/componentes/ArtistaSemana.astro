@@ -12,10 +12,20 @@ const candidatos = artistas.filter((a) => a.data.foto).map((a) => ({
   seguidores: a.data.seguidores ? seguidoresCorto(a.data.seguidores) : '', saludo: a.data.saludo ?? '',
   instagram: instagramUrl(a.data.instagram), usuario: instagramUsuario(a.data.instagram), pagina: paginaArtista(a),
 }));
+const ficha = (a) => ({
+  id: a.id, nombre: a.data.nombre, foto: a.data.foto ?? '', tipo: a.data.tipo ?? '', genero: a.data.genero ?? '',
+  seguidores: a.data.seguidores ? seguidoresCorto(a.data.seguidores) : '', saludo: a.data.saludo ?? '',
+  instagram: instagramUrl(a.data.instagram), usuario: instagramUsuario(a.data.instagram), pagina: paginaArtista(a),
+});
+// Calendario completo: así el artista programado aparece su lunes aunque el sitio no se republique.
+const programadas = datos.semanas
+  .map((s) => ({ s, a: artistas.find((x) => x.id === s.artista) }))
+  .filter(({ a }) => a)
+  .map(({ s, a }) => ({ desde: s.desde ?? '', hasta: s.hasta ?? '', motivo: s.motivo ?? '', ...ficha(a) }));
 const d = elegido?.artista.data;
 ---
 {elegido && (
-  <div class="semana" data-semana data-fijado={elegido.fijado ? '1' : ''} data-hasta={elegido.hasta ?? ''}>
+  <div class="semana" data-semana data-actual={elegido.artista.id}>
     <a class="semana-foto" href={paginaArtista(elegido.artista)} style={`--g:url('${d.foto ?? ''}')`} aria-label={d.nombre}></a>
     <div class="semana-txt">
       <span class="k">Artista de la semana</span>
@@ -29,25 +39,37 @@ const d = elegido?.artista.data;
       </div>
     </div>
     <script type="application/json" id="artistas-semana" set:html={JSON.stringify(candidatos)}></script>
+    <script type="application/json" id="semanas-programadas" set:html={JSON.stringify(programadas)}></script>
   </div>
 )}
 <script is:inline>
-  // Si no hay un artista fijado para esta semana, el turno se calcula aquí con la fecha de hoy.
+  // El artista se decide aquí con la fecha de hoy: primero el calendario de artista-semana.json,
+  // y si ninguna semana está vigente, el turno automático entre los que tienen foto.
   (function () {
     const caja = document.querySelector('[data-semana]');
     if (!caja) return;
     const hoy = new Date().toISOString().slice(0, 10);
-    // Un artista fijado manda mientras su fecha "hasta" no haya pasado (aunque el sitio no se haya republicado)
-    if (caja.dataset.fijado && (!caja.dataset.hasta || caja.dataset.hasta >= hoy)) return;
-    caja.querySelector('.semana-motivo')?.remove();
-    const lista = JSON.parse(document.getElementById('artistas-semana').textContent);
-    if (lista.length < 2) return;
-    const semana = Math.floor((Date.now() - Date.UTC(2026, 0, 5)) / (7 * 864e5));
-    const a = lista[((semana % lista.length) + lista.length) % lista.length];
+    const leer = (id) => { try { return JSON.parse(document.getElementById(id).textContent); } catch (e) { return []; } };
+    const programada = leer('semanas-programadas').find((s) => (!s.desde || s.desde <= hoy) && (!s.hasta || s.hasta >= hoy));
+    let a = programada;
+    if (!a) {
+      const lista = leer('artistas-semana');
+      if (!lista.length) return;
+      const semana = Math.floor((Date.now() - Date.UTC(2026, 0, 5)) / (7 * 864e5));
+      a = lista[((semana % lista.length) + lista.length) % lista.length];
+    }
+    const motivo = caja.querySelector('.semana-motivo');
+    if (a.id === caja.dataset.actual) { if (!programada && motivo) motivo.remove(); return; }
+    caja.dataset.actual = a.id;
     caja.querySelector('.semana-foto').style.setProperty('--g', `url('${a.foto}')`);
     caja.querySelector('.semana-foto').href = a.pagina;
+    caja.querySelector('.semana-foto').setAttribute('aria-label', a.nombre);
     const h = caja.querySelector('h3 a'); h.textContent = a.nombre; h.href = a.pagina;
     caja.querySelector('.semana-meta').textContent = [a.tipo ? `Artista ${a.tipo}` : '', a.genero, a.seguidores ? `${a.seguidores} seguidores en Instagram` : ''].filter(Boolean).join(' · ');
+    if (programada && programada.motivo) {
+      if (motivo) motivo.textContent = programada.motivo;
+      else { const p = document.createElement('p'); p.className = 'semana-motivo'; p.textContent = programada.motivo; caja.querySelector('.semana-meta').after(p); }
+    } else if (motivo) motivo.remove();
     const s = caja.querySelector('[data-saludo]'); if (s) { if (a.saludo) s.href = a.saludo; else s.remove(); }
     const ig = caja.querySelector('[data-ig]'); if (ig) { if (a.instagram) { ig.href = a.instagram; ig.textContent = a.usuario; } else ig.remove(); }
     caja.querySelector('[data-pagina]').href = a.pagina;
