@@ -283,6 +283,17 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
 .perfil .cuerpo{margin-top:24px;color:#e4e6ff;font-size:1.02rem;max-width:62ch}
 .perfil .cuerpo p{margin-bottom:1em}
 .perfil-agenda{display:grid;gap:12px;margin-top:26px}
+/* Lanzamiento y galería (opcionales en la ficha del artista) */
+.lanz{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;margin-top:26px;padding:16px;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(135deg,rgba(255,95,210,.10),rgba(25,224,230,.06))}
+.lanz-portada{width:150px;height:150px;object-fit:cover;border-radius:14px;box-shadow:0 14px 30px -12px rgba(0,0,0,.8)}
+.lanz-txt h2{font-size:1.45rem;line-height:1.1;margin:4px 0 6px}
+.lanz-txt p{color:#d5d7f3;font-size:.92rem;margin-bottom:12px}
+.lanz-spotify{grid-column:1/-1;width:100%;height:152px;border:0;border-radius:12px}
+.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:26px}
+.galeria img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:14px;border:1px solid var(--line);transition:.2s}
+.galeria a:hover img{border-color:var(--cyan);transform:translateY(-3px)}
+.ficha .nuevo{align-self:flex-start;margin-bottom:8px;font-size:.7rem;font-weight:800;padding:4px 9px;border-radius:999px;background:var(--pink);color:#fff;letter-spacing:.02em}
+@media (max-width:600px){.lanz{grid-template-columns:96px 1fr;gap:12px;padding:12px}.lanz-portada{width:96px;height:96px}.lanz-txt h2{font-size:1.15rem}}
 .perfil-cta{margin-top:26px;padding:16px 18px;border:1px dashed var(--line);border-radius:14px;font-size:.88rem;color:var(--mut)}
 .perfil-cta a{color:var(--cyan);font-weight:700}
 @media (max-width:980px){

@@ -40,6 +40,18 @@ const artistas = defineCollection({
     // Seguidores en Instagram al momento de revisarlo (número entero, por ejemplo 272000)
     seguidores: z.number().int().nonnegative().optional(),
     enlace: z.string().optional(),
+    // Fotos adicionales del artista (rutas en /img/artistas/...). Opcional: si no hay, no se muestra nada.
+    galeria: z.array(z.string()).default([]),
+    // Último lanzamiento (sencillo, video, álbum). Opcional: solo los artistas que lo tengan muestran el bloque.
+    lanzamiento: z.object({
+      titulo: z.string(),
+      portada: z.string().optional(),
+      fecha: z.coerce.date().optional(),
+      texto: z.string().optional(),
+      spotify: z.string().url().optional(),
+      youtube: z.string().url().optional(),
+      apple: z.string().url().optional(),
+    }).optional(),
   }),
 });
 

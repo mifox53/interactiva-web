@@ -19,6 +19,13 @@ const eventos = (await getCollection('eventos', (e) => !e.data.borrador && e.dat
   e.data.artista.trim().toLowerCase() === d.nombre.trim().toLowerCase())).sort((a, b) => a.data.fecha - b.data.fecha);
 
 const otros = ordenarArtistas((await getCollection('artistas')).filter((a) => a.id !== artista.id)).slice(0, 4);
+// Spotify: convierte el enlace de la canción en su reproductor incrustado
+const spotifyEmbed = (u) => {
+  const m = u?.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(track|album|playlist|artist)\/([A-Za-z0-9]+)/);
+  return m ? `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator&theme=0` : null;
+};
+const L = d.lanzamiento;
+const embed = L ? spotifyEmbed(L.spotify) : null;
 const etiqueta = [d.tipo ? `Artista ${d.tipo}` : 'Artista', d.genero].filter(Boolean).join(' · ');
 const descripcion = `${d.nombre} en iNteractiva 89.7 FM, la radio de los artistas.${d.genero ? ` ${d.genero}.` : ''}`;
 ---
@@ -34,7 +41,30 @@ const descripcion = `${d.nombre} en iNteractiva 89.7 FM, la radio de los artista
         {d.instagram && <a class="btn" href={instagramUrl(d.instagram)} target="_blank" rel="noopener">{instagramUsuario(d.instagram)}</a>}
         {d.enlace && <a class="btn" href={d.enlace} target="_blank" rel="noopener">Sitio del artista</a>}
       </div>
+      {L && (
+        <div class="lanz">
+          {L.portada && <img class="lanz-portada" src={L.portada} alt={`Portada de «${L.titulo}»`} loading="lazy" width="600" height="600" />}
+          <div class="lanz-txt">
+            <span class="k">Nuevo lanzamiento{L.fecha ? ` · ${fechaLarga(L.fecha)}` : ''}</span>
+            <h2>{L.titulo}</h2>
+            {L.texto && <p>{L.texto}</p>}
+            <div class="hero-acc">
+              {L.spotify && <a class="btn lleno" href={L.spotify} target="_blank" rel="noopener">Escuchar en Spotify</a>}
+              {L.youtube && <a class="btn" href={L.youtube} target="_blank" rel="noopener">▶ Ver en YouTube</a>}
+              {L.apple && <a class="btn" href={L.apple} target="_blank" rel="noopener">Apple Music</a>}
+            </div>
+          </div>
+          {embed && <iframe class="lanz-spotify" src={embed} title={`${L.titulo} en Spotify`} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>}
+        </div>
+      )}
+
       {tieneTexto && <div class="cuerpo"><Content /></div>}
+
+      {d.galeria.length > 0 && (
+        <div class="galeria">
+          {d.galeria.map((f) => <a href={f} target="_blank" rel="noopener"><img src={f} alt={d.nombre} loading="lazy" /></a>)}
+        </div>
+      )}
 
       {eventos.length > 0 && (
         <div class="perfil-agenda">

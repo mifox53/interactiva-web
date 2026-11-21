@@ -11,6 +11,7 @@ const etiqueta = [d.tipo ? `Artista ${d.tipo}` : 'Artista', d.genero].filter(Boo
 ---
 <a class="ficha" href={paginaArtista(artista)} data-tipo={d.tipo ?? ''} data-genero={d.genero ?? ''}
    style={`--g:${d.foto ? `url('${d.foto}')` : degradados[n % degradados.length]}`}>
+  {d.lanzamiento && <span class="nuevo">♪ Nuevo tema</span>}
   {d.seguidores ? <span class="seg">{seguidoresCorto(d.seguidores)} seguidores</span> : null}
   <span class="k">{etiqueta}</span>
   <strong>{d.nombre}</strong>
