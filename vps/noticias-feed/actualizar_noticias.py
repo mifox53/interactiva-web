@@ -123,6 +123,7 @@ def leer_feed(datos):
 class Filtro:
     def __init__(self, reglas):
         self.bloquear = patron(reglas["bloquear"])
+        self.regex = [re.compile(r) for r in reglas.get("bloquear_regex", [])]
         self.secciones = {normal(s) for s in reglas.get("secciones_bloqueadas", [])}
         self.temas = [(cat, patron(palabras)) for cat, palabras in reglas["temas"].items()]
         # lugares: (region, nombre visible, patrón), en el orden del archivo (nacional primero)
@@ -131,10 +132,14 @@ class Filtro:
             for nombre in nombres:
                 self.lugares.append((region, nombre, patron([nombre])))
 
-    def motivo_descarte(self, item):
-        cats = {normal(c) for c in item["categorias"]}
+    def motivo_descarte(self, item, ignorar=()):
+        cats = {normal(c) for c in item["categorias"]} - {normal(c) for c in ignorar}
         if cats & self.secciones:
             return "sección: " + ", ".join(sorted(cats & self.secciones))
+        titulo = normal(item["titulo"])
+        for r in self.regex:
+            if r.search(titulo):
+                return "forma de declaración u opinión"
         todo = normal(" ".join([item["titulo"], item["texto"], " ".join(item["categorias"])]))
         m = self.bloquear.search(todo) if self.bloquear else None
         if m:
@@ -142,7 +147,7 @@ class Filtro:
         return None
 
     def tema(self, item):
-        cuerpo = normal(" ".join([item["titulo"], " ".join(item["categorias"]), item["texto"][:400]]))
+        cuerpo = normal(" ".join([item["titulo"], " ".join(item["categorias"])]))
         for cat, p in self.temas:
             if p and p.search(cuerpo):
                 return cat
@@ -187,7 +192,7 @@ def main():
             clave_titulo = normal(item["titulo"])[:70]
             if item["enlace"] in vistos_enlace or clave_titulo in vistos_titulo:
                 continue
-            motivo = filtro.motivo_descarte(item)
+            motivo = filtro.motivo_descarte(item, fuente.get("ignorar_secciones", []))
             if not motivo and item["enlace"] in enlaces_bloqueados:
                 motivo = "bloqueado a mano"
             if not motivo and palabras_bloqueadas and palabras_bloqueadas.search(normal(item["titulo"])):

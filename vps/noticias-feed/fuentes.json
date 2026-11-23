@@ -1,5 +1,5 @@
 {
-  "_ayuda": "Feeds RSS que lee el VPS cada 3 horas. region: la que se usa si el titular no nombra un lugar conocido. seguro: true solo para feeds de secciones sin política (deportes, cultura); en los demás el titular necesita una palabra de tema (ver filtros.json). verificado: si ya se comprobó que el feed responde. Para quitar una fuente, poner activo: false.",
+  "_ayuda": "Feeds RSS que lee el VPS cada 3 horas. region: la que se usa si el titular no nombra un lugar conocido. seguro: true solo para feeds de secciones sin política (deportes, cultura); en los demás el titular necesita una palabra de tema (ver filtros.json). verificado: si ya se comprobó que el feed responde. Para quitar una fuente, poner activo: false. ignorar_secciones: categorías que un medio pone a todas sus notas (por ejemplo Calletacarigua.com marca todo como mundo, política y sucesos); para ese medio no cuentan.",
   "fuentes": [
     {
       "nombre": "Diario de Los Andes",
@@ -14,7 +14,7 @@
       "feed": "https://diariodelosandes.com/secciones/tachira/feed/",
       "region": "andes",
       "seguro": false,
-      "verificado": false,
+      "verificado": true,
       "activo": true
     },
     {
@@ -22,7 +22,7 @@
       "feed": "https://diariodelosandes.com/secciones/trujillo/feed/",
       "region": "andes",
       "seguro": false,
-      "verificado": false,
+      "verificado": true,
       "activo": true
     },
     {
@@ -30,7 +30,7 @@
       "feed": "https://eldiario.com/feed/",
       "region": "nacional",
       "seguro": false,
-      "verificado": false,
+      "verificado": true,
       "activo": true
     },
     {
@@ -38,7 +38,7 @@
       "feed": "https://cronica.uno/feed/",
       "region": "capital",
       "seguro": false,
-      "verificado": false,
+      "verificado": true,
       "activo": true
     },
     {
@@ -46,15 +46,20 @@
       "feed": "https://calletacarigua.com/feed/",
       "region": "oriente",
       "seguro": false,
-      "verificado": false,
-      "activo": true
+      "verificado": true,
+      "activo": true,
+      "ignorar_secciones": [
+        "mundo",
+        "politica",
+        "sucesos"
+      ]
     },
     {
       "nombre": "El Pitazo",
       "feed": "https://elpitazo.net/feed/",
       "region": "nacional",
       "seguro": false,
-      "verificado": false,
+      "verificado": true,
       "activo": true
     },
     {
@@ -62,7 +67,7 @@
       "feed": "https://correodelcaroni.com/feed/",
       "region": "guayana",
       "seguro": false,
-      "verificado": false,
+      "verificado": true,
       "activo": true
     },
     {
@@ -70,7 +75,7 @@
       "feed": "https://www.el-carabobeno.com/feed/",
       "region": "centro",
       "seguro": false,
-      "verificado": false,
+      "verificado": true,
       "activo": true
     },
     {
@@ -78,7 +83,7 @@
       "feed": "https://www.radiofeyalegrianoticias.com/feed/",
       "region": "nacional",
       "seguro": false,
-      "verificado": false,
+      "verificado": true,
       "activo": true
     }
   ]
