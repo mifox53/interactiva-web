@@ -94,16 +94,27 @@ const menu = [
       ver();
       if (items.length > 1) setInterval(() => { i = (i + 1) % items.length; ver(); }, (+esp.dataset.segundos || 6) * 1000);
     });
-    // --- Conteo de clics por patrocinante (se activa al poner el código en sitio.json) ---
+    // --- Analítica con GoatCounter (se activa al poner el código en sitio.json -> analitica.goatcounter) ---
+    // Cuenta visitas por página y estos eventos:
+    //   clic-patrocinante-<id>  clic en el logo o ficha de un patrocinante
+    //   clic-whatsapp           clic en cualquier botón o enlace de WhatsApp
+    //   escuchar-en-vivo        alguien empezó a escuchar la radio desde la página (una vez por visita)
     if (gc) {
       const s = document.createElement('script');
       s.async = true; s.src = 'https://gc.zgo.at/count.js';
       s.dataset.goatcounter = `https://${gc}.goatcounter.com/count`;
       document.head.appendChild(s);
+      const evento = (path, title) => { if (window.goatcounter?.count) window.goatcounter.count({ path, title: title || path, event: true }); };
       document.addEventListener('click', (e) => {
         const a = e.target.closest('[data-patrocinante]');
-        if (a && window.goatcounter?.count) window.goatcounter.count({ path: `clic-patrocinante-${a.dataset.patrocinante}`, title: a.dataset.patrocinante, event: true });
+        if (a) evento(`clic-patrocinante-${a.dataset.patrocinante}`, a.dataset.patrocinante);
+        const w = e.target.closest('a[href*="wa.me/"]');
+        if (w) evento('clic-whatsapp', `WhatsApp desde ${location.pathname}`);
       });
+      // El formulario de /anunciate/ abre WhatsApp desde código, no desde un enlace
+      document.addEventListener('submit', (e) => { if (e.target.id === 'altaForm') evento('clic-whatsapp', 'Formulario Anúnciate'); });
+      let yaSono = false;
+      document.addEventListener('radio:sonando', () => { if (!yaSono) { yaSono = true; evento('escuchar-en-vivo', 'Escuchar en vivo'); } });
     }
   </script>
 </body>

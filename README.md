@@ -18,6 +18,8 @@ para cambiar algo casi siempre se toca **un solo archivo pequeño**.
 | Vitrina (videos de emprendedores) | se llena sola desde Instagram; ver sección Vitrina |
 | Texto de "Nosotros" | `src/datos/sitio.json` → `nosotros` |
 | Planes y formulario de anunciantes | `src/pages/anunciate.astro` |
+| Kit para anunciantes: cifras, paquetes y precios (página `/anunciantes/`) | `src/datos/kit.json` |
+| Analítica (visitas y clics) | `src/datos/sitio.json` → `analitica.goatcounter` |
 | Colores y estilos | `src/estilos/global.css` |
 
 Los archivos `_plantilla.md` son modelos para copiar; no se publican.
@@ -76,8 +78,36 @@ Cada patrocinante tiene:
 Si un espacio `vip` o `premium` tiene varios patrocinantes, rotan cada `rotacionSegundos`.
 Si no tiene ninguno vigente, muestra "Espacio disponible".
 
-Para contar clics por patrocinante: crear una cuenta en goatcounter.com y poner el código
-de la cuenta en `sitio.json` → `analitica.goatcounter`.
+Cuántas personas hicieron clic en cada patrocinante se ve en la analítica (ver abajo), como
+`clic-patrocinante-<id>`. Sirve para mandarle a cada anunciante su informe del mes.
+
+## Kit para anunciantes
+
+La página `/anunciantes/` es la que Frank comparte con los negocios: cifras de alcance, artistas,
+dónde aparece la marca y paquetes (VIP, Premium, Emprendedor, Evento), con botón de WhatsApp por
+paquete y botón **Guardar en PDF** (sale en 2 páginas A4, en fondo blanco).
+
+Todo se cambia en `src/datos/kit.json`:
+
+- `cifras`: cada una con `valor`, `texto`, `fuente` y `fecha`. Si `valor` está vacío, no se muestra.
+  Al actualizar una cifra, cambiar también su `fecha`. Las visitas salen de la analítica y los
+  oyentes de `https://interactiva.duckdns.org/feed/oyentes.json` (ver `vps/oyentes/README.md`).
+- `paquetes`: qué incluye cada uno, duración y `precio`. Sin precio dice "Consultar".
+- Los artistas que salen son los 8 primeros con foto, en el mismo orden de la portada.
+
+## Analítica
+
+Con [GoatCounter](https://www.goatcounter.com) (gratis, sin cookies, no hace falta aviso de cookies).
+Se activa poniendo el código de la cuenta en `sitio.json` → `analitica.goatcounter`
+(si la cuenta es `interactiva.goatcounter.com`, el código es `interactiva`). Cuenta:
+
+- Visitas a cada página.
+- `clic-patrocinante-<id>`: clics en el logo o la ficha de cada patrocinante.
+- `clic-whatsapp`: clics en botones de WhatsApp (incluye el formulario de Anúnciate).
+- `escuchar-en-vivo`: personas que empezaron a escuchar la radio desde la página (una vez por visita).
+
+Mientras el código esté vacío no se carga nada. La radio por internet tiene su propio conteo de
+oyentes en el VPS: `vps/oyentes/README.md`.
 
 ## Publicación (Render, sitio estático)
 

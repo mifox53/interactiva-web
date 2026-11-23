@@ -1,0 +1,110 @@
+{
+  "_ayuda": "Kit para anunciantes (/anunciantes/). Una cifra con valor vacío no se muestra. Un paquete sin precio dice 'Consultar'. Al actualizar una cifra, cambiar también su fecha.",
+  "titulo": "Tu marca al lado de los artistas",
+  "intro": "Tu imagen comercial se destaca al lado de tus artistas preferidos: al aire, en nuestras redes y en nuestra página.",
+  "cifras": [
+    {
+      "valor": "34,1 mil",
+      "texto": "visualizaciones en Instagram en los últimos 30 días",
+      "fuente": "Panel de Instagram",
+      "fecha": "2026-11-23"
+    },
+    {
+      "valor": "2.314",
+      "texto": "seguidores en Instagram",
+      "fuente": "@interactiva89.7fm",
+      "fecha": "2026-11-14"
+    },
+    {
+      "valor": "",
+      "texto": "visitas a la página en los últimos 30 días",
+      "fuente": "Analítica de interactiva.com.ve",
+      "fecha": ""
+    },
+    {
+      "valor": "",
+      "texto": "oyentes por internet en los últimos 30 días",
+      "fuente": "Servidor de la radio en línea",
+      "fecha": ""
+    },
+    {
+      "valor": "24 h",
+      "texto": "de música al aire, todos los días",
+      "fuente": "",
+      "fecha": ""
+    }
+  ],
+  "canales": [
+    {
+      "titulo": "Al aire",
+      "texto": "89.7 FM en Mérida y en línea para el mundo. Menciones de tu marca en una radio con menos publicidad y más música, donde cada anuncio se escucha."
+    },
+    {
+      "titulo": "En las redes",
+      "texto": "Reels y publicaciones de tu negocio en Instagram, Facebook y TikTok, hechos por nuestro equipo."
+    },
+    {
+      "titulo": "En la página",
+      "texto": "Tu logo en los apartados VIP y Premium de la portada, al lado de los artistas; en la franja de empresas, en el directorio Negocios de Mérida y en la Vitrina de videos."
+    }
+  ],
+  "paquetes": [
+    {
+      "id": "vip",
+      "nombre": "VIP",
+      "resumen": "La mayor exposición: tu marca en el primer lugar de la portada.",
+      "incluye": [
+        "Apartado VIP en la portada de la página, al lado de los artistas",
+        "Logo en la franja \"Empresas que nos acompañan\"",
+        "Ficha con video en \"Negocios de Mérida\"",
+        "2 menciones al aire por día",
+        "2 reels al mes en Instagram y Facebook"
+      ],
+      "duracion": "3, 6 o 12 meses de exposición fija e ininterrumpida",
+      "precio": "",
+      "destacado": true
+    },
+    {
+      "id": "premium",
+      "nombre": "Premium",
+      "resumen": "Presencia fuerte en la portada y al aire.",
+      "incluye": [
+        "Apartado Premium en la portada de la página",
+        "Logo en la franja \"Empresas que nos acompañan\"",
+        "Ficha en \"Negocios de Mérida\"",
+        "1 mención al aire por día",
+        "1 reel al mes en Instagram y Facebook"
+      ],
+      "duracion": "3, 6 o 12 meses de exposición fija e ininterrumpida",
+      "precio": "",
+      "destacado": false
+    },
+    {
+      "id": "emprendedor",
+      "nombre": "Emprendedor",
+      "resumen": "Para negocios que empiezan y quieren darse a conocer.",
+      "incluye": [
+        "Ficha en \"Negocios de Mérida\"",
+        "Tu video en la Vitrina de la página e Instagram",
+        "3 menciones al aire por semana"
+      ],
+      "duracion": "3, 6 o 12 meses",
+      "precio": "",
+      "destacado": false
+    },
+    {
+      "id": "evento",
+      "nombre": "Evento",
+      "resumen": "Para conciertos, ferias y actividades con fecha.",
+      "incluye": [
+        "Tu evento en la Agenda de la página",
+        "Anuncio al aire los días previos al evento",
+        "Publicación e historia en Instagram"
+      ],
+      "duracion": "Pago único por evento",
+      "precio": "",
+      "destacado": false
+    }
+  ],
+  "condiciones": "Los precios y formas de pago se coordinan con nuestro equipo."
+}

@@ -1,0 +1,7 @@
+[Unit]
+Description=Oyentes de iNteractiva: resume las conexiones al stream de los últimos 30 días
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/etc/oyentes.env
+ExecStart=/usr/bin/python3 -I /opt/oyentes/contar_oyentes.py
