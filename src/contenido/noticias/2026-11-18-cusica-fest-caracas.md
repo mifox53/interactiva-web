@@ -8,7 +8,7 @@ resumen: "Después de dos años, el festival regresa a la Universidad Simón Bol
 fuenteNombre: "El Diario"
 fuenteUrl: "https://eldiario.com/2026/11/18/los-menores-cusica-fest-2026/"
 destacada: false
-borrador: true
+borrador: false
 ---
 
 El Cusica Fest regresa a Caracas tras dos años de pausa. Será el viernes 4 y el sábado 5 de diciembre

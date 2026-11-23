@@ -8,7 +8,7 @@ resumen: "Del 26 al 28 de noviembre, motorizados de todo el país y una delegaci
 fuenteNombre: "Diario de Los Andes"
 fuenteUrl: "https://diariodelosandes.com/merida-sera-la-sede-del-evento-de-mototurismo-mas-grande-del-pais-con-el-motorad-days-2026/"
 destacada: false
-borrador: true
+borrador: false
 ---
 
 El estado Mérida será la sede del Motorad Days 2026 los días 26, 27 y 28 de noviembre. Según sus

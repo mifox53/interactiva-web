@@ -8,7 +8,7 @@ resumen: "39.031 aficionados vieron el 11-8 de Magallanes sobre Leones en diez e
 fuenteNombre: "teleSUR"
 fuenteUrl: "https://www.telesurtv.net/navegantes-vence-leones-record-monumental/"
 destacada: false
-borrador: true
+borrador: false
 ---
 
 Los eternos rivales llenaron el Estadio Monumental Simón Bolívar el martes 17 de noviembre: 39.031

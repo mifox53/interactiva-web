@@ -8,7 +8,7 @@ resumen: "El esgrimista merideño Alejandro Gutiérrez ganó medalla de bronce e
 fuenteNombre: "Diario de Los Andes"
 fuenteUrl: "https://diariodelosandes.com/alejandro-gutierrez-hace-brillar-a-merida-con-bronce-en-florete/"
 destacada: false
-borrador: true
+borrador: false
 ---
 
 Alejandro Gutiérrez, esgrimista de Mérida, se colgó el bronce en florete en la tercera jornada de los

@@ -8,7 +8,7 @@ resumen: "El 18 de noviembre, el Zulia honró a su patrona, la Virgen de Chiquin
 fuenteNombre: "El Diario"
 fuenteUrl: "https://eldiario.com/2026/11/18/zulia-celebra-virgen-de-chiquinquira-cronograma-18-noviembre/"
 destacada: false
-borrador: true
+borrador: false
 ---
 
 Como cada 18 de noviembre, el Zulia celebró el día de Nuestra Señora del Rosario de Chiquinquirá, La

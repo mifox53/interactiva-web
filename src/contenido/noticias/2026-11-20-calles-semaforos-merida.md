@@ -8,7 +8,7 @@ resumen: "Conductores alertan por el mal estado de varias calles de la ciudad y 
 fuenteNombre: "Diario de Los Andes"
 fuenteUrl: "https://diariodelosandes.com/crisis-vial-en-merida-calles-deterioradas-y-semaforos-apagados-ponen-en-peligro-a-conductores/"
 destacada: false
-borrador: true
+borrador: false
 ---
 
 Conductores y vecinos de Mérida reportan calles deterioradas y muchos semáforos que no funcionan:

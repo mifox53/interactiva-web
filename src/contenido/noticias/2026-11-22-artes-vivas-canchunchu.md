@@ -8,7 +8,7 @@ resumen: "Unos 30 participantes de Charallave, El Muco y Canchunchu mostraron da
 fuenteNombre: "Calletacarigua.com"
 fuenteUrl: "https://calletacarigua.com/blog/2026/11/22/canchunchu-fue-sede-del-festival-de-escuelas-artes-vivas-de-la-parroquia-santa-catalina/"
 destacada: false
-borrador: true
+borrador: false
 ---
 
 El sábado 21 de noviembre, la Biblioteca Maestro Honorario Alfredo Alvino, en el sector La Planta de
