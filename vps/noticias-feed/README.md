@@ -52,8 +52,8 @@ Ver el resultado: `https://interactiva.duckdns.org/feed/noticias.json`. La pági
 en la portada, la sección «Venezuela ahora» muestra los titulares en vez de la lista de la semana.
 
 En la prueba, las fuentes con ✗ no respondieron (dirección del feed cambiada o sitio caído). Hay
-que corregir su `feed` en `fuentes.json` o poner `"activo": false`. Solo el feed de Mérida de
-Diario de Los Andes está comprobado; los demás se comprueban con esta primera prueba.
+que corregir su `feed` en `fuentes.json` o poner `"activo": false`. Las 10 fuentes respondieron en
+la primera prueba (23 de noviembre de 2026).
 
 ## Esconder un titular que se coló
 
@@ -67,6 +67,16 @@ Dos formas:
 
 Si una palabra deja pasar cosas que no van, agrégala a `bloquear` en `filtros.json` y vuelve a
 copiar el archivo al VPS (`scp vps/noticias-feed/filtros.json root@64.176.5.192:/opt/noticias-feed/`).
+
+## Actualizar el programa o el filtro
+
+Cuando cambien `filtros.json`, `fuentes.json` o el programa en el repositorio, en PowerShell:
+
+```
+ssh root@64.176.5.192 'set -e; B=https://raw.githubusercontent.com/mifox53/interactiva-web/main/vps/noticias-feed; cd /opt/noticias-feed; for f in actualizar_noticias.py fuentes.json filtros.json; do curl -fsSLO $B/$f; done; python3 -I actualizar_noticias.py --probar; systemctl start noticias-feed.service; echo LISTO'
+```
+
+Muestra la prueba y deja publicados los titulares nuevos al momento.
 
 ## Reglas de uso de las fuentes
 
