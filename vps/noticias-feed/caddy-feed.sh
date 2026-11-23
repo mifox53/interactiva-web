@@ -10,7 +10,8 @@
 #   2. Si no, guarda una copia (/etc/caddy/Caddyfile.antes-feed) y agrega el bloque de /feed/
 #      justo después de la línea «interactiva.duckdns.org {».
 #   3. Valida la configuración nueva. Si no es válida, vuelve a dejar la anterior.
-#   4. Recarga Caddy (sin cortar la transmisión) y comprueba el feed y la radio.
+#   4. Recarga Caddy (Icecast no se reinicia; quien esté escuchando puede tener un corte
+#      breve y el reproductor se reconecta) y comprueba el feed y la radio.
 set -euo pipefail
 
 CF=/etc/caddy/Caddyfile
