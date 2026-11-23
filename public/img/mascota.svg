@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-labelledby="mascota-titulo">
+  <title id="mascota-titulo">Mascota de la emisora: un zorro fucsia con audífonos</title>
+  <defs>
+    <linearGradient id="pelo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f25ad6"/>
+      <stop offset="1" stop-color="#d22fb4"/>
+    </linearGradient>
+    <linearGradient id="cresta" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2fe4ff"/>
+      <stop offset="1" stop-color="#2b6ff2"/>
+    </linearGradient>
+    <linearGradient id="chaqueta" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a3f86"/>
+      <stop offset="1" stop-color="#16214d"/>
+    </linearGradient>
+    <radialGradient id="iris" cx="0.4" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#7fe9ff"/>
+      <stop offset="0.55" stop-color="#1fa8ea"/>
+      <stop offset="1" stop-color="#1557b8"/>
+    </radialGradient>
+    <linearGradient id="copa" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3a3f4d"/>
+      <stop offset="1" stop-color="#14161d"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Chaqueta y pecho -->
+  <path d="M88 400 C92 352 128 330 170 322 L230 322 C272 330 308 352 312 400 Z" fill="url(#chaqueta)"/>
+  <path d="M170 322 L200 372 L230 322 Z" fill="#fbeff8"/>
+  <path d="M150 328 L200 392 L168 400 L132 400 C136 368 140 346 150 328 Z" fill="#2f4a9a"/>
+  <path d="M250 328 L200 392 L232 400 L268 400 C264 368 260 346 250 328 Z" fill="#2f4a9a"/>
+  <path d="M176 318 C186 334 214 334 224 318 L224 300 L176 300 Z" fill="#d22fb4"/>
+
+  <!-- Orejas (detrás de la cabeza) -->
+  <path d="M112 170 L92 46 C132 58 164 88 182 124 Z" fill="url(#pelo)"/>
+  <path d="M120 150 L106 70 C132 82 152 104 164 128 Z" fill="#f6e9f6"/>
+  <path d="M288 170 L308 46 C268 58 236 88 218 124 Z" fill="url(#pelo)"/>
+  <path d="M280 150 L294 70 C268 82 248 104 236 128 Z" fill="#f6e9f6"/>
+
+  <!-- Cabeza con mechones en las mejillas -->
+  <path d="M200 98 C268 98 314 140 318 200 C320 232 312 254 300 270 L322 284 L292 290 L304 306 L272 304 C252 318 228 324 200 324 C172 324 148 318 128 304 L96 306 L108 290 L78 284 L100 270 C88 254 80 232 82 200 C86 140 132 98 200 98 Z" fill="url(#pelo)"/>
+  <!-- Sombra suave bajo los ojos -->
+  <path d="M96 236 C110 266 140 286 200 290 C260 286 290 266 304 236 C296 270 262 300 200 304 C138 300 104 270 96 236 Z" fill="#b8269c" opacity="0.5"/>
+  <!-- Hocico y mejillas blancas -->
+  <path d="M200 228 C236 228 262 246 286 272 L306 280 L284 288 L294 302 L266 298 C248 312 224 318 200 318 C176 318 152 312 134 298 L106 302 L116 288 L94 280 L114 272 C138 246 164 228 200 228 Z" fill="#fbf4fb"/>
+
+  <!-- Diadema de los audífonos -->
+  <path d="M86 214 C82 118 136 74 200 74 C264 74 318 118 314 214" fill="none" stroke="#23262f" stroke-width="15" stroke-linecap="round"/>
+  <path d="M96 196 C96 124 142 88 200 88 C258 88 304 124 304 196" fill="none" stroke="#5b6170" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Cresta celeste -->
+  <path d="M142 142 Q128 124 112 106 Q140 106 154 118 Q146 92 138 72 Q166 82 178 106 Q176 76 170 48 Q198 64 204 98 Q212 70 210 42 Q234 64 230 102 Q246 82 250 58 Q266 86 254 118 Q266 110 280 100 Q278 124 262 138 C240 122 220 118 200 118 C178 118 160 126 142 142 Z" fill="url(#cresta)"/>
+  <path d="M152 126 Q154 104 148 88 M180 112 Q184 90 178 66 M206 108 Q214 84 214 60 M232 112 Q244 96 248 76" fill="none" stroke="#9af4ff" stroke-width="4" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- Cejas -->
+  <path d="M130 168 C142 152 166 148 184 158" fill="none" stroke="#25d0f5" stroke-width="10" stroke-linecap="round"/>
+  <path d="M270 168 C258 152 234 148 216 158" fill="none" stroke="#25d0f5" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Ojos -->
+  <ellipse cx="160" cy="202" rx="29" ry="33" fill="#ffffff" stroke="#3a1036" stroke-width="3"/>
+  <ellipse cx="240" cy="202" rx="29" ry="33" fill="#ffffff" stroke="#3a1036" stroke-width="3"/>
+  <circle cx="162" cy="206" r="19" fill="url(#iris)"/>
+  <circle cx="242" cy="206" r="19" fill="url(#iris)"/>
+  <circle cx="163" cy="207" r="10" fill="#0d1020"/>
+  <circle cx="243" cy="207" r="10" fill="#0d1020"/>
+  <circle cx="156" cy="199" r="5.5" fill="#ffffff"/>
+  <circle cx="236" cy="199" r="5.5" fill="#ffffff"/>
+  <circle cx="168" cy="213" r="2.5" fill="#ffffff" opacity="0.9"/>
+  <circle cx="248" cy="213" r="2.5" fill="#ffffff" opacity="0.9"/>
+
+  <!-- Nariz -->
+  <path d="M184 246 C184 238 216 238 216 246 C216 256 206 264 200 264 C194 264 184 256 184 246 Z" fill="#141420"/>
+  <ellipse cx="194" cy="244" rx="6" ry="3" fill="#ffffff" opacity="0.55"/>
+
+  <!-- Boca abierta con dos dientes -->
+  <path d="M200 264 L200 272" stroke="#3a1036" stroke-width="3" stroke-linecap="round"/>
+  <path d="M164 270 C176 278 190 276 200 272 C210 276 224 278 236 270 C234 296 218 310 200 310 C182 310 166 296 164 270 Z" fill="#5c1235"/>
+  <path d="M178 298 C186 290 214 290 222 298 C216 306 208 310 200 310 C192 310 184 306 178 298 Z" fill="#ff6b98"/>
+  <path d="M189 273 L199 273 L198 285 C198 288 190 288 190 285 Z" fill="#ffffff"/>
+  <path d="M201 273 L211 273 L210 285 C210 288 202 288 202 285 Z" fill="#ffffff"/>
+
+  <!-- Copas de los audífonos -->
+  <rect x="58" y="176" width="52" height="82" rx="24" fill="url(#copa)"/>
+  <rect x="68" y="188" width="32" height="58" rx="15" fill="#c9ced8"/>
+  <rect x="74" y="196" width="20" height="42" rx="10" fill="#1b1e27" stroke="#2fe4ff" stroke-width="3"/>
+  <rect x="290" y="176" width="52" height="82" rx="24" fill="url(#copa)"/>
+  <rect x="300" y="188" width="32" height="58" rx="15" fill="#c9ced8"/>
+  <rect x="306" y="196" width="20" height="42" rx="10" fill="#1b1e27" stroke="#2fe4ff" stroke-width="3"/>
+
+  <!-- Micrófono -->
+  <path d="M316 250 C314 284 290 300 252 302" fill="none" stroke="#23262f" stroke-width="7" stroke-linecap="round"/>
+  <rect x="232" y="294" width="26" height="16" rx="8" fill="#14161d"/>
+  <rect x="236" y="298" width="8" height="8" rx="4" fill="#2fe4ff"/>
+</svg>
