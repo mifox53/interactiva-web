@@ -25,8 +25,10 @@ Los archivos `_plantilla.md` son modelos para copiar; no se publican.
 ## Reglas del contenido
 
 - El nombre se escribe siempre **iNteractiva 89.7 FM**.
-- Noticias: solo agricultura, café, eventos, deportes, cultura y ciudad. **Nada de política.**
-  Resumen con palabras propias y enlace a la fuente. Fotos propias o con permiso.
+- Noticias («Venezuela ahora»): Mérida primero y lo mejor de las regiones. Temas: agricultura, café,
+  cultura, música, turismo, eventos, deportes, ciudad y clima y vías. **Nada de política.** Resumen
+  con palabras propias y enlace a la fuente. Fotos propias o con permiso. Fuentes, criterios y flujo
+  semanal: `docs/noticias.md`.
 - Una noticia o evento con `borrador: true` no aparece en el sitio. Se publica al cambiarlo a `false`.
 - Lo pagado lleva `patrocinado: true` y sale con la etiqueta "Patrocinado".
 

@@ -15,8 +15,54 @@ export const NOMBRES_CATEGORIA = {
   eventos: 'Eventos',
   deportes: 'Deportes',
   cultura: 'Cultura',
+  musica: 'Música',
+  turismo: 'Turismo',
   ciudad: 'Ciudad',
+  'clima-y-vias': 'Clima y vías',
 };
+
+export const NOMBRES_REGION = {
+  merida: 'Mérida',
+  andes: 'Andes',
+  capital: 'Caracas y Miranda',
+  centro: 'Centro',
+  occidente: 'Occidente',
+  oriente: 'Oriente',
+  llanos: 'Llanos',
+  guayana: 'Guayana',
+  nacional: 'Venezuela',
+};
+
+/** Etiqueta de lugar de una noticia: "Cumaná, Sucre" si se indicó, o el nombre de la región. */
+export const lugarNoticia = (d) => d.lugar || NOMBRES_REGION[d.region] || 'Mérida';
+
+/**
+ * Noticias para la portada: Mérida primero y luego variedad de regiones.
+ * Toma hasta 2 de Mérida y completa con una por región; si faltan, rellena con las más recientes.
+ */
+export function elegirNoticias(lista, total = 5) {
+  const orden = [...lista].sort((a, b) => Number(b.data.destacada) - Number(a.data.destacada) || b.data.fecha - a.data.fecha);
+  const elegidas = [];
+  const tomar = (n) => { if (elegidas.length < total && !elegidas.includes(n)) elegidas.push(n); };
+  orden.filter((n) => n.data.region === 'merida').slice(0, 2).forEach(tomar);
+  const vistas = new Set(['merida']);
+  for (const n of orden) if (!vistas.has(n.data.region)) { vistas.add(n.data.region); tomar(n); }
+  orden.forEach(tomar);
+  // La primera (grande) es la destacada o la más reciente de Mérida; las demás, de la más nueva a la más vieja
+  const [primera, ...resto] = elegidas;
+  return primera ? [primera, ...resto.sort((a, b) => b.data.fecha - a.data.fecha)] : [];
+}
+
+/** "Semana del 16 al 22 de noviembre" para la semana (lunes a domingo) de una fecha. */
+export function semanaDe(fecha) {
+  const d = new Date(fecha);
+  const dia = (d.getUTCDay() + 6) % 7; // 0 = lunes
+  const lunes = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - dia));
+  const domingo = new Date(lunes.getTime() + 6 * 86400000);
+  const mes = (x) => x.toLocaleDateString('es-VE', { month: 'long', timeZone: 'UTC' });
+  const ini = lunes.getUTCMonth() === domingo.getUTCMonth() ? `${lunes.getUTCDate()}` : `${lunes.getUTCDate()} de ${mes(lunes)}`;
+  return `Semana del ${ini} al ${domingo.getUTCDate()} de ${mes(domingo)}`;
+}
 
 /** Enlace al perfil de Instagram a partir del usuario ("lizcontigo", "@lizcontigo") o de un enlace completo. */
 export function instagramUrl(valor) {

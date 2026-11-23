@@ -105,10 +105,21 @@ section.bloque{padding:52px 0 6px}
 .noticias .lista{display:grid;gap:16px}
 .noticia{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center}
 .noticia-img{height:92px;border-radius:14px;background:linear-gradient(135deg,#8b3dff,#19e0e6) center/cover no-repeat}
-.noticia-img[data-cat=cafe]{background-image:linear-gradient(135deg,#7a3b12,#d9ae3f)}
-.noticia-img[data-cat=agricultura]{background-image:linear-gradient(135deg,#136b3a,#9bd44a)}
-.noticia-img[data-cat=deportes]{background-image:linear-gradient(135deg,#1438a8,#19e0e6)}
-.noticia-img[data-cat=eventos]{background-image:linear-gradient(135deg,#ff5fd2,#8b3dff)}
+/* Sin foto: color según la región y el nombre de la ciudad encima */
+.noticia-img{position:relative;display:flex;align-items:flex-end;padding:10px 12px}
+.noticia-img span{font-size:.78rem;font-weight:800;line-height:1.1;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.35)}
+.noticia.grande .noticia-img span{font-size:1.6rem;letter-spacing:-.01em}
+.noticia-img[data-region=andes]{background-image:linear-gradient(135deg,#136b3a,#19c2a0)}
+.noticia-img[data-region=capital]{background-image:linear-gradient(135deg,#ff7a3d,#d42f8e)}
+.noticia-img[data-region=centro]{background-image:linear-gradient(135deg,#1438a8,#4f7dff)}
+.noticia-img[data-region=occidente]{background-image:linear-gradient(135deg,#b0331f,#f0a82c)}
+.noticia-img[data-region=oriente]{background-image:linear-gradient(135deg,#0a5aa8,#19e0e6)}
+.noticia-img[data-region=llanos]{background-image:linear-gradient(135deg,#6b6a12,#e0c43a)}
+.noticia-img[data-region=guayana]{background-image:linear-gradient(135deg,#0b4d3c,#2fbf6a)}
+.noticia-img[data-region=nacional]{background-image:linear-gradient(135deg,#ff5fd2,#5b1fd6)}
+.noticias-todas{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 28px}
+.noticias-todas .noticia[hidden]{display:none}
+.noticias-semana{display:inline-block;margin:-6px 0 18px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
 .noticia h3{font-size:1rem;line-height:1.25;margin:3px 0}
 .noticia small{font-size:.76rem;color:var(--mut)}
 .noticia.grande{display:block;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card)}
@@ -254,6 +265,7 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
   .dock-widget{order:3;flex-basis:100%;width:100%;margin-left:0}
   body{padding-bottom:170px}
   .noticia{grid-template-columns:92px 1fr}.noticia-img{height:76px}
+  .noticias-todas{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 

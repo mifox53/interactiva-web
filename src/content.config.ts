@@ -2,8 +2,19 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
-// Categorías permitidas para noticias. Política queda fuera a propósito.
-export const CATEGORIAS = ['agricultura', 'cafe', 'eventos', 'deportes', 'cultura', 'ciudad'] as const;
+// Categorías permitidas para noticias. Política queda fuera a propósito (ver docs/noticias.md).
+export const CATEGORIAS = [
+  'agricultura', 'cafe', 'eventos', 'deportes', 'cultura', 'musica', 'turismo', 'ciudad', 'clima-y-vias',
+] as const;
+
+// Regiones de Venezuela para agrupar las noticias. Mérida va aparte porque es la casa.
+// andes: Táchira, Trujillo · capital: Caracas, Miranda, La Guaira · centro: Aragua, Carabobo, Yaracuy
+// occidente: Zulia, Lara, Falcón · oriente: Sucre, Anzoátegui, Monagas, Nueva Esparta
+// llanos: Barinas, Apure, Portuguesa, Guárico, Cojedes · guayana: Bolívar, Amazonas, Delta Amacuro
+// nacional: lo que toca a todo el país (por ejemplo, la temporada de béisbol)
+export const REGIONES = [
+  'merida', 'andes', 'capital', 'centro', 'occidente', 'oriente', 'llanos', 'guayana', 'nacional',
+] as const;
 
 const noticias = defineCollection({
   loader: glob({ pattern: '**/[^_]*.md', base: './src/contenido/noticias' }),
@@ -11,6 +22,9 @@ const noticias = defineCollection({
     titulo: z.string(),
     fecha: z.coerce.date(),
     categoria: z.enum(CATEGORIAS),
+    // Región y lugar: "oriente" + "Cumaná, Sucre". Si no se indica, la noticia es de Mérida.
+    region: z.enum(REGIONES).default('merida'),
+    lugar: z.string().optional(),
     resumen: z.string(),
     fuenteNombre: z.string(),
     fuenteUrl: z.string().url(),
