@@ -1,0 +1,85 @@
+{
+  "_ayuda": "Feeds RSS que lee el VPS cada 3 horas. region: la que se usa si el titular no nombra un lugar conocido. seguro: true solo para feeds de secciones sin política (deportes, cultura); en los demás el titular necesita una palabra de tema (ver filtros.json). verificado: si ya se comprobó que el feed responde. Para quitar una fuente, poner activo: false.",
+  "fuentes": [
+    {
+      "nombre": "Diario de Los Andes",
+      "feed": "https://diariodelosandes.com/secciones/merida/feed/",
+      "region": "merida",
+      "seguro": false,
+      "verificado": true,
+      "activo": true
+    },
+    {
+      "nombre": "Diario de Los Andes",
+      "feed": "https://diariodelosandes.com/secciones/tachira/feed/",
+      "region": "andes",
+      "seguro": false,
+      "verificado": false,
+      "activo": true
+    },
+    {
+      "nombre": "Diario de Los Andes",
+      "feed": "https://diariodelosandes.com/secciones/trujillo/feed/",
+      "region": "andes",
+      "seguro": false,
+      "verificado": false,
+      "activo": true
+    },
+    {
+      "nombre": "El Diario",
+      "feed": "https://eldiario.com/feed/",
+      "region": "nacional",
+      "seguro": false,
+      "verificado": false,
+      "activo": true
+    },
+    {
+      "nombre": "Crónica Uno",
+      "feed": "https://cronica.uno/feed/",
+      "region": "capital",
+      "seguro": false,
+      "verificado": false,
+      "activo": true
+    },
+    {
+      "nombre": "Calletacarigua.com",
+      "feed": "https://calletacarigua.com/feed/",
+      "region": "oriente",
+      "seguro": false,
+      "verificado": false,
+      "activo": true
+    },
+    {
+      "nombre": "El Pitazo",
+      "feed": "https://elpitazo.net/feed/",
+      "region": "nacional",
+      "seguro": false,
+      "verificado": false,
+      "activo": true
+    },
+    {
+      "nombre": "Correo del Caroní",
+      "feed": "https://correodelcaroni.com/feed/",
+      "region": "guayana",
+      "seguro": false,
+      "verificado": false,
+      "activo": true
+    },
+    {
+      "nombre": "El Carabobeño",
+      "feed": "https://www.el-carabobeno.com/feed/",
+      "region": "centro",
+      "seguro": false,
+      "verificado": false,
+      "activo": true
+    },
+    {
+      "nombre": "Radio Fe y Alegría Noticias",
+      "feed": "https://www.radiofeyalegrianoticias.com/feed/",
+      "region": "nacional",
+      "seguro": false,
+      "verificado": false,
+      "activo": true
+    }
+  ]
+}

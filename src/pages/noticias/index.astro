@@ -3,6 +3,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import TarjetaNoticia from '../../componentes/TarjetaNoticia.astro';
+import Titulares from '../../componentes/Titulares.astro';
 import { NOMBRES_REGION } from '../../lib/util.js';
 import { REGIONES } from '../../content.config';
 
@@ -17,6 +18,7 @@ const regiones = REGIONES.filter((r) => cuenta[r]);
     <p class="bajada">Mérida primero, y lo mejor de las regiones: cultura, música, deportes, agro, eventos, clima y vías.</p>
     {noticias.length > 0 ? (
       <>
+        <h3 class="titulares-cab">De la emisora</h3>
         {regiones.length > 1 && (
           <div class="filtros" data-filtros>
             <button class="activo" data-f="">Todas <span>{noticias.length}</span></button>
@@ -26,8 +28,9 @@ const regiones = REGIONES.filter((r) => cuenta[r]);
         <div class="noticias-todas" data-lista>{noticias.map((n) => <TarjetaNoticia noticia={n} />)}</div>
       </>
     ) : (
-      <div class="vacio"><strong>Muy pronto</strong><span>Aquí aparecerán cada semana las noticias de Mérida y de las regiones de Venezuela.</span></div>
+      <div class="vacio" data-respaldo><strong>Muy pronto</strong><span>Aquí aparecerán cada semana las noticias de Mérida y de las regiones de Venezuela.</span></div>
     )}
+    <div class="noticias-titulares"><Titulares modo="todas" /></div>
     <a class="volver" href="/">← Volver al inicio</a>
   </section>
 

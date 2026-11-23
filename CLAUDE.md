@@ -8,7 +8,7 @@ Sitio estático en Astro. Idioma del sitio y de los mensajes de commit: español
 - Contenido editable: `src/datos/*.json` y `src/contenido/{noticias,artistas,eventos}/*.md`
   (esquemas en `src/content.config.ts`). Ver README.md para el detalle.
 - Noticias: seguir `docs/noticias.md` (fuentes, qué cuenta como política, regiones, flujo semanal).
-  Categorías y regiones en `content.config.ts`; nada de política. Redacción propia, con `fuenteNombre`
+  Categorías y regiones en `content.config.ts`; nada de política ni de religión. Redacción propia, con `fuenteNombre`
   y `fuenteUrl`. Crear siempre con `borrador: true` salvo que Miguel pida publicar.
 - No inventar noticias, artistas, eventos, horarios ni patrocinantes. Los artistas salen de lo que
   publica la emisora (Instagram @interactiva89.7fm) o de lo que pase Miguel; `seguidores` es la cifra

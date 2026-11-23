@@ -1,0 +1,10 @@
+[Unit]
+Description=Actualiza los titulares de Venezuela ahora cada 3 horas
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=3h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

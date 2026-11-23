@@ -1,0 +1,9 @@
+[Unit]
+Description=Titulares automáticos de iNteractiva (Venezuela ahora)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/etc/noticias-feed.env
+ExecStart=/usr/bin/python3 -I /opt/noticias-feed/actualizar_noticias.py

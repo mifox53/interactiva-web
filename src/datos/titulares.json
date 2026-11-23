@@ -1,0 +1,6 @@
+{
+  "_ayuda": "Titulares automáticos de «Venezuela ahora». Los arma el VPS cada 3 horas (vps/noticias-feed/README.md). bloquear: enlaces de notas que no deben salir en la página. enPortada: cuántos titulares se ven en la portada.",
+  "feed": "https://interactiva.duckdns.org/feed/noticias.json",
+  "enPortada": 5,
+  "bloquear": []
+}
