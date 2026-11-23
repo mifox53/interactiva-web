@@ -1,21 +1,48 @@
 ---
+// Todas las noticias publicadas, con filtro por región (Mérida, Andes, Oriente...).
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import TarjetaNoticia from '../../componentes/TarjetaNoticia.astro';
+import { NOMBRES_REGION } from '../../lib/util.js';
+import { REGIONES } from '../../content.config';
 
 const noticias = (await getCollection('noticias', (n) => !n.data.borrador)).sort((a, b) => b.data.fecha - a.data.fecha);
+// Solo se muestran los botones de las regiones que tienen noticias, en el orden de REGIONES
+const cuenta = noticias.reduce((m, n) => ((m[n.data.region] = (m[n.data.region] || 0) + 1), m), {});
+const regiones = REGIONES.filter((r) => cuenta[r]);
 ---
-<Base titulo="Noticias de Mérida" descripcion="Noticias de Mérida: agricultura, café, cultura, eventos y deportes.">
+<Base titulo="Noticias de Venezuela" descripcion="Noticias de Mérida y de las regiones de Venezuela: cultura, música, deportes, agro, eventos, clima y vías.">
   <section class="bloque wrap">
-    <div class="cab"><h2>Noticias de Mérida</h2></div>
-    <p class="bajada">Agricultura, café, cultura, eventos y deportes de nuestra ciudad.</p>
+    <div class="cab"><h2>Venezuela ahora</h2></div>
+    <p class="bajada">Mérida primero, y lo mejor de las regiones: cultura, música, deportes, agro, eventos, clima y vías.</p>
     {noticias.length > 0 ? (
-      <div class="noticias">
-        <div class="lista">{noticias.map((n) => <TarjetaNoticia noticia={n} />)}</div>
-      </div>
+      <>
+        {regiones.length > 1 && (
+          <div class="filtros" data-filtros>
+            <button class="activo" data-f="">Todas <span>{noticias.length}</span></button>
+            {regiones.map((r) => <button data-f={r}>{NOMBRES_REGION[r]} <span>{cuenta[r]}</span></button>)}
+          </div>
+        )}
+        <div class="noticias-todas" data-lista>{noticias.map((n) => <TarjetaNoticia noticia={n} />)}</div>
+      </>
     ) : (
-      <div class="vacio"><strong>Muy pronto</strong><span>Aquí aparecerán cada semana las noticias más relevantes de Mérida.</span></div>
+      <div class="vacio"><strong>Muy pronto</strong><span>Aquí aparecerán cada semana las noticias de Mérida y de las regiones de Venezuela.</span></div>
     )}
     <a class="volver" href="/">← Volver al inicio</a>
   </section>
+
+  <script is:inline>
+    // Filtro por región: solo esconde y muestra tarjetas, sin recargar
+    (function () {
+      const barra = document.querySelector('[data-filtros]');
+      if (!barra) return;
+      const tarjetas = [...document.querySelectorAll('[data-lista] .noticia')];
+      barra.addEventListener('click', (e) => {
+        const b = e.target.closest('button');
+        if (!b) return;
+        barra.querySelectorAll('button').forEach((x) => x.classList.toggle('activo', x === b));
+        tarjetas.forEach((t) => { t.hidden = Boolean(b.dataset.f) && t.dataset.region !== b.dataset.f; });
+      });
+    })();
+  </script>
 </Base>
