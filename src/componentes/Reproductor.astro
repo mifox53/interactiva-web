@@ -62,7 +62,10 @@ const r = sitio.reproductor;
   }
 
   boton.addEventListener('click', () => (audio.paused ? reproducir() : detener()));
-  audio.addEventListener('playing', () => { poner('Sonando en vivo', 'sonando'); boton.setAttribute('aria-label', 'Pausar'); boton.title = 'Pausar'; });
+  audio.addEventListener('playing', () => {
+    poner('Sonando en vivo', 'sonando'); boton.setAttribute('aria-label', 'Pausar'); boton.title = 'Pausar';
+    document.dispatchEvent(new CustomEvent('radio:sonando')); // lo usa la analítica (Base.astro)
+  });
   audio.addEventListener('pause', () => { boton.setAttribute('aria-label', 'Reproducir la radio'); boton.title = 'Reproducir'; });
   audio.addEventListener('waiting', () => poner('Cargando…', 'cargando'));
   audio.addEventListener('stalled', () => poner('Señal inestable…', 'cargando'));

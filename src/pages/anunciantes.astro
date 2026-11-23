@@ -1,0 +1,224 @@
+---
+// Kit para anunciantes: cifras, dónde aparece la marca y paquetes.
+// Todo el contenido se cambia en src/datos/kit.json. Se puede guardar como PDF desde el botón.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import sitio from '../datos/sitio.json';
+import kit from '../datos/kit.json';
+import { wa, ordenarArtistas, paginaArtista } from '../lib/util.js';
+
+const cifras = kit.cifras.filter((c) => c.valor);
+const fmt = new Intl.DateTimeFormat('es-VE', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const fecha = (f) => (f ? fmt.format(new Date(f + 'T00:00:00Z')).replace('.', '') : '');
+
+const todos = ordenarArtistas(await getCollection('artistas'));
+const conFoto = todos.filter((a) => a.data.foto).slice(0, 8);
+const resto = todos.length - conFoto.length;
+
+const midiendo = Boolean(sitio.analitica.goatcounter);
+const urlKit = new URL('/anunciantes/', Astro.site).href.replace(/^https?:\/\//, '').replace(/\/$/, '');
+const descripcion = `Cifras, espacios y paquetes para anunciarte en ${sitio.nombre}.` +
+  (cifras[0] ? ` ${cifras[0].valor} ${cifras[0].texto}.` : '');
+---
+<Base titulo="Kit para anunciantes" descripcion={descripcion}>
+  <!-- Encabezado que solo sale al imprimir o guardar en PDF -->
+  <div class="kit-impreso wrap">
+    <img src={sitio.logo} alt="" width="54" height="54" />
+    <div><strong>{sitio.nombre}</strong><span>Kit para anunciantes · {urlKit}</span></div>
+    <span class="kit-impreso-wa">WhatsApp {sitio.whatsappTexto}<br />{sitio.correo}</span>
+  </div>
+
+  <div class="hero kit-hero">
+    <div class="wrap">
+      <span class="k">Kit para anunciantes</span>
+      <h1>{kit.titulo}</h1>
+      <p class="sub">{kit.intro}</p>
+      <div class="regla"></div>
+      <div class="hero-acc no-imprimir">
+        <a class="btn lleno" href={wa('Hola, vi el kit para anunciantes de iNteractiva y quiero información para anunciarme.')} target="_blank" rel="noopener">Quiero anunciarme</a>
+        <button class="btn" type="button" data-imprimir>Guardar en PDF</button>
+      </div>
+    </div>
+  </div>
+
+  {cifras.length > 0 && (
+    <section class="bloque wrap" id="cifras">
+      <div class="cab"><h2>Nuestro alcance</h2></div>
+      <div class="kit-cifras">
+        {cifras.map((c) => (
+          <div class="kit-cifra">
+            <strong>{c.valor}</strong>
+            <span>{c.texto}</span>
+            {(c.fuente || c.fecha) && <small>{[c.fuente, fecha(c.fecha)].filter(Boolean).join(' · ')}</small>}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {conFoto.length > 0 && (
+    <section class="bloque wrap" id="artistas">
+      <div class="cab"><h2>Al lado de tus artistas</h2></div>
+      <p class="bajada">Tu marca comparte espacio con los artistas que pasan por {sitio.nombre}.</p>
+      <div class="kit-artistas">
+        {conFoto.map((a) => (
+          <a href={paginaArtista(a)} style={`--f:url('${a.data.foto}')`}><span>{a.data.nombre}</span></a>
+        ))}
+      </div>
+      {resto > 0 && <p class="kit-mas"><a href="/artistas/">y {resto} artistas más →</a></p>}
+    </section>
+  )}
+
+  <section class="bloque wrap" id="donde">
+    <div class="cab"><h2>Dónde aparece tu marca</h2></div>
+    <div class="kit-canales desliza">
+      {kit.canales.map((c, i) => (
+        <div class="kit-canal"><span class="kit-num">{String(i + 1).padStart(2, '0')}</span><h3>{c.titulo}</h3><p>{c.texto}</p></div>
+      ))}
+    </div>
+    {midiendo && (
+      <p class="kit-nota">Medimos los resultados: cada mes te enviamos cuántas personas hicieron clic en tu logo dentro de la página.</p>
+    )}
+  </section>
+
+  <section class="bloque wrap" id="paquetes">
+    <div class="cab"><h2>Paquetes</h2></div>
+    <div class="kit-paquetes desliza">
+      {kit.paquetes.map((p) => (
+        <div class:list={['kit-paquete', { destacado: p.destacado }]}>
+          <span class="k">{p.destacado ? 'Más completo' : 'Paquete'}</span>
+          <h3>{p.nombre}</h3>
+          <p class="kit-resumen">{p.resumen}</p>
+          <ul>{p.incluye.map((x) => <li>{x}</li>)}</ul>
+          <p class="kit-duracion">{p.duracion}</p>
+          <p class="kit-precio">{p.precio || 'Consultar'}</p>
+          <a class:list={['btn', 'no-imprimir', { lleno: p.destacado }]} href={wa(`Hola, vi el kit para anunciantes de iNteractiva y quiero información del paquete ${p.nombre}.`)} target="_blank" rel="noopener">Quiero este paquete</a>
+        </div>
+      ))}
+    </div>
+    <p class="kit-nota">{kit.condiciones}</p>
+  </section>
+
+  <section class="bloque wrap">
+    <div class="contacto">
+      <div>
+        <h2>Hablemos de tu marca</h2>
+        <p>Escríbenos por WhatsApp al {sitio.whatsappTexto} o al correo <a href={`mailto:${sitio.correo}`}>{sitio.correo}</a>.</p>
+      </div>
+      <a class="btn lleno no-imprimir" href={wa('Hola, vi el kit para anunciantes de iNteractiva y quiero información para anunciarme.')} target="_blank" rel="noopener">Escribir por WhatsApp</a>
+    </div>
+    <a class="volver no-imprimir" href="/anunciate/">← Volver a Anúnciate</a>
+  </section>
+
+  <script is:inline>
+    document.querySelector('[data-imprimir]')?.addEventListener('click', () => window.print());
+  </script>
+</Base>
+
+<style is:global>
+  /* ---------- Kit para anunciantes ---------- */
+  .kit-impreso{display:none}
+  .kit-hero{padding-bottom:20px}
+  .kit-hero h1{max-width:16ch}
+  .kit-hero p.sub{max-width:52ch}
+
+  .kit-cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:14px}
+  .kit-cifra{display:flex;flex-direction:column;gap:4px;padding:22px;border-radius:var(--r);border:1px solid var(--line);background:var(--card)}
+  .kit-cifra strong{font-size:clamp(2rem,4vw,2.6rem);font-weight:800;line-height:1;letter-spacing:-.02em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .kit-cifra span{font-size:.92rem;color:#dcdefa}
+  .kit-cifra small{margin-top:auto;padding-top:8px;font-size:.72rem;color:var(--mut)}
+
+  .kit-artistas{display:grid;grid-template-columns:repeat(8,1fr);gap:12px}
+  .kit-artistas a{position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--f) center top/cover no-repeat,var(--card);transition:.2s}
+  .kit-artistas a:hover{transform:translateY(-4px);border-color:var(--cyan)}
+  .kit-artistas a::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(6,7,22,.9))}
+  .kit-artistas span{position:absolute;left:10px;right:8px;bottom:8px;z-index:1;font-size:.74rem;font-weight:700;line-height:1.15}
+  .kit-mas{margin-top:12px;font-size:.88rem;font-weight:700;color:var(--cyan)}
+
+  .kit-canales{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+  .kit-canal{padding:22px;border-radius:var(--r);border:1px solid var(--line);background:var(--bg2)}
+  .kit-num{font-size:.8rem;font-weight:800;color:var(--pink)}
+  .kit-canal h3{font-size:1.1rem;margin:4px 0 6px}
+  .kit-canal p{font-size:.9rem;color:#d5d7f3}
+  .kit-nota{margin-top:16px;font-size:.88rem;color:var(--mut);max-width:70ch}
+
+  .kit-paquetes{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px;align-items:stretch}
+  .kit-paquete{display:flex;flex-direction:column;gap:8px;padding:22px;border-radius:var(--r);border:1px solid var(--line);background:var(--card)}
+  .kit-paquete.destacado{border-color:transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
+  .kit-paquete h3{font-size:1.5rem;font-weight:800;font-style:italic;line-height:1}
+  .kit-resumen{font-size:.88rem;color:#d5d7f3}
+  .kit-paquete ul{list-style:none;display:grid;gap:7px;margin:6px 0;font-size:.86rem}
+  .kit-paquete li{position:relative;padding-left:18px}
+  .kit-paquete li::before{content:"";position:absolute;left:0;top:.5em;width:8px;height:8px;border-radius:50%;background:var(--cyan)}
+  .kit-duracion{margin-top:auto;font-size:.78rem;color:var(--mut)}
+  .kit-precio{font-size:1.05rem;font-weight:800;color:var(--cyan);text-transform:uppercase;letter-spacing:.04em}
+  .kit-paquete .btn{white-space:normal;text-align:center}
+
+  @media (max-width:980px){
+    .kit-artistas{grid-template-columns:repeat(4,1fr)}
+    .kit-canales{grid-template-columns:1fr}
+    .kit-paquetes{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:600px){
+    .kit-cifras{grid-template-columns:1fr 1fr;gap:10px}
+    .kit-cifra{padding:16px}
+    .kit-cifra strong{font-size:1.7rem}
+    .kit-cifra span{font-size:.8rem}
+    .kit-artistas{grid-template-columns:repeat(4,1fr);gap:8px}
+    .kit-artistas span{font-size:.62rem;left:6px;bottom:6px}
+    /* En celular canales y paquetes se deslizan de lado (página más corta), como en la portada */
+    .kit-canales.desliza,.kit-paquetes.desliza{display:flex;margin-top:14px}
+    .kit-canales.desliza>*{flex-basis:80%}
+    .kit-paquetes.desliza>*{flex-basis:84%}
+  }
+
+  /* ---------- Versión para imprimir o guardar en PDF ---------- */
+  @media print{
+    @page{size:A4;margin:14mm}
+    *{animation:none!important;transition:none!important}
+    body{background:#fff!important;color:#1a1730!important;padding:0!important;font-size:11pt}
+    header,footer,.dock,.atajos,.no-imprimir{display:none!important}
+    .wrap{width:100%}
+    .kit-impreso{display:flex!important;align-items:center;gap:12px;padding-bottom:10px;margin-bottom:6px;border-bottom:2px solid #8b3dff}
+    .kit-impreso img{border-radius:10px}
+    .kit-impreso strong{display:block;font-size:13pt}
+    .kit-impreso span{font-size:9pt;color:#555}
+    .kit-impreso .kit-impreso-wa{margin-left:auto;text-align:right}
+    .hero::before{display:none}
+    .kit-hero{padding:8px 0 0}
+    h1{font-size:24pt;color:#1a1730}
+    h1 em,.k{color:#5b1fd6!important}
+    .hero p.sub,.bajada,.kit-cifra span,.kit-canal p,.kit-resumen,.kit-nota,.contacto p{color:#333!important}
+    .regla{margin:10px 0}
+    section.bloque{padding-top:16px}
+    .cab h2{color:#1a1730}
+    .kit-cifra,.kit-canal,.kit-paquete,.contacto{background:#fff!important;border:1px solid #cfc8ef!important;break-inside:avoid}
+    .kit-cifra strong{background:none;color:#5b1fd6;-webkit-text-fill-color:#5b1fd6}
+    .kit-cifra small,.kit-duracion{color:#666}
+    .kit-artistas{grid-template-columns:repeat(8,1fr);gap:6px}
+    .kit-artistas a{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .kit-artistas span{color:#fff}
+    .kit-mas a{color:#5b1fd6}
+    .desliza{display:grid!important;overflow:visible!important;margin-inline:0!important;padding-inline:0!important}
+    #artistas,#donde,#cifras{break-inside:avoid}
+    #paquetes{break-before:page}
+    h1{font-size:20pt}
+    section.bloque{padding-top:12px}
+    .kit-cifras{gap:8px}
+    .kit-cifra{padding:12px 14px}
+    .kit-cifra strong{font-size:20pt}
+    .kit-cifra span{font-size:9pt}
+    .kit-artistas a{aspect-ratio:4/5}
+    .kit-canales{grid-template-columns:repeat(3,1fr);gap:8px}
+    .kit-canal{padding:12px 14px}
+    .kit-canal p{font-size:9pt}
+    .kit-paquetes{grid-template-columns:repeat(2,1fr);gap:10px}
+    .kit-paquete{padding:16px 18px;gap:6px}
+    .kit-paquete h3{font-size:18pt}
+    .kit-paquete ul,.kit-resumen{font-size:10pt}
+    .kit-paquete li::before{background:#5b1fd6}
+    .kit-precio{color:#5b1fd6}
+    .contacto h2{color:#1a1730}
+    a{color:inherit}
+  }
+</style>
