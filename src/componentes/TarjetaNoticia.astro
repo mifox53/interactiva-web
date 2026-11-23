@@ -1,14 +1,19 @@
 ---
-import { fechaLarga, NOMBRES_CATEGORIA } from '../lib/util.js';
+import { fechaLarga, NOMBRES_CATEGORIA, lugarNoticia } from '../lib/util.js';
 const { noticia, grande = false } = Astro.props;
 const d = noticia.data;
+const lugar = lugarNoticia(d);
+// Sin foto, la tarjeta muestra la ciudad sobre el color de su región
+const ciudad = lugar.split(',')[0];
 ---
-<a class:list={['noticia', { grande }]} href={`/noticias/${noticia.id}/`}>
-  <div class="noticia-img" style={d.imagen ? `background-image:url('${d.imagen}')` : ''} data-cat={d.categoria}></div>
+<a class:list={['noticia', { grande }]} href={`/noticias/${noticia.id}/`} data-region={d.region}>
+  <div class="noticia-img" style={d.imagen ? `background-image:url('${d.imagen}')` : ''} data-region={d.region}>
+    {!d.imagen && <span>{ciudad}</span>}
+  </div>
   <div class="noticia-txt">
     <span class="k">{NOMBRES_CATEGORIA[d.categoria]}</span>
     <h3>{d.titulo}</h3>
     {grande && <p>{d.resumen}</p>}
-    <small>{fechaLarga(d.fecha)} · Fuente: {d.fuenteNombre}</small>
+    <small>{lugar} · {fechaLarga(d.fecha)} · Fuente: {d.fuenteNombre}</small>
   </div>
 </a>

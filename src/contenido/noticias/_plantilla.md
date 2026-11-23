@@ -1,7 +1,9 @@
 ---
 titulo: "Título de la noticia"
 fecha: 2026-01-01
-categoria: cafe   # agricultura | cafe | eventos | deportes | cultura | ciudad
+categoria: cafe   # agricultura | cafe | eventos | deportes | cultura | musica | turismo | ciudad | clima-y-vias
+region: merida    # merida | andes | capital | centro | occidente | oriente | llanos | guayana | nacional
+lugar: "Mérida"   # ciudad y estado, por ejemplo "Cumaná, Sucre"
 resumen: "Una o dos frases propias que cuenten lo esencial."
 fuenteNombre: "Nombre del medio"
 fuenteUrl: "https://ejemplo.com/noticia-original"

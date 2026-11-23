@@ -9,12 +9,12 @@ import Vitrina from '../componentes/Vitrina.astro';
 import sitio from '../datos/sitio.json';
 import patro from '../datos/patrocinantes.json';
 import programacion from '../datos/programacion.json';
-import { wa, fechaLarga, ordenarArtistas, paginaArtista } from '../lib/util.js';
+import { wa, fechaLarga, ordenarArtistas, paginaArtista, elegirNoticias, semanaDe } from '../lib/util.js';
 
-// Noticias publicadas, la más reciente primero (la destacada sube al inicio)
-const noticias = (await getCollection('noticias', (n) => !n.data.borrador))
-  .sort((a, b) => Number(b.data.destacada) - Number(a.data.destacada) || b.data.fecha - a.data.fecha)
-  .slice(0, 5);
+// Noticias publicadas: Mérida primero y luego variedad de regiones (ver elegirNoticias en util.js)
+const publicadas = await getCollection('noticias', (n) => !n.data.borrador);
+const noticias = elegirNoticias(publicadas, 5);
+const ultimaFecha = publicadas.reduce((m, n) => (n.data.fecha > m ? n.data.fecha : m), null);
 
 const artistas = ordenarArtistas(await getCollection('artistas'));
 // En la portada se muestran como máximo estos; el resto está en /artistas/
@@ -98,8 +98,9 @@ const fichasLibres = enPortada.length % 4 === 0 ? 0 : 4 - (enPortada.length % 4)
 
   <!-- ============ NOTICIAS ============ -->
   <section class="bloque wrap" id="noticias">
-    <div class="cab"><h2>Mérida ahora</h2>{noticias.length > 0 && <a href="/noticias/">Ver todas →</a>}</div>
-    <p class="bajada">Agricultura, café, cultura, eventos y deportes de nuestra ciudad.</p>
+    <div class="cab"><h2>Venezuela ahora</h2>{noticias.length > 0 && <a href="/noticias/">Ver todas →</a>}</div>
+    <p class="bajada">Mérida primero, y lo mejor de las regiones: cultura, música, deportes, agro, eventos, clima y vías.</p>
+    {ultimaFecha && <span class="noticias-semana">{semanaDe(ultimaFecha)}</span>}
     {noticias.length > 0 ? (
       <div class:list={['noticias', { una: noticias.length === 1 }]}>
         <TarjetaNoticia noticia={noticias[0]} grande />
@@ -108,7 +109,7 @@ const fichasLibres = enPortada.length % 4 === 0 ? 0 : 4 - (enPortada.length % 4)
     ) : (
       <div class="vacio">
         <strong>Muy pronto</strong>
-        <span>Aquí aparecerán cada semana las noticias más relevantes de Mérida.</span>
+        <span>Aquí aparecerán cada semana las noticias de Mérida y de las regiones de Venezuela.</span>
       </div>
     )}
   </section>
