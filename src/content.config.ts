@@ -2,7 +2,7 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
-// Categorías permitidas para noticias. Política queda fuera a propósito (ver docs/noticias.md).
+// Categorías permitidas para noticias. Política y religión quedan fuera a propósito (ver docs/noticias.md).
 export const CATEGORIAS = [
   'agricultura', 'cafe', 'eventos', 'deportes', 'cultura', 'musica', 'turismo', 'ciudad', 'clima-y-vias',
 ] as const;

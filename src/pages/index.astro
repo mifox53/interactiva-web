@@ -6,6 +6,7 @@ import TarjetaNoticia from '../componentes/TarjetaNoticia.astro';
 import FichaArtista from '../componentes/FichaArtista.astro';
 import ArtistaSemana from '../componentes/ArtistaSemana.astro';
 import Vitrina from '../componentes/Vitrina.astro';
+import Titulares from '../componentes/Titulares.astro';
 import sitio from '../datos/sitio.json';
 import patro from '../datos/patrocinantes.json';
 import programacion from '../datos/programacion.json';
@@ -98,19 +99,26 @@ const fichasLibres = enPortada.length % 4 === 0 ? 0 : 4 - (enPortada.length % 4)
 
   <!-- ============ NOTICIAS ============ -->
   <section class="bloque wrap" id="noticias">
-    <div class="cab"><h2>Venezuela ahora</h2>{noticias.length > 0 && <a href="/noticias/">Ver todas →</a>}</div>
+    <div class="cab"><h2>Venezuela ahora</h2><a href="/noticias/">Ver todas →</a></div>
     <p class="bajada">Mérida primero, y lo mejor de las regiones: cultura, música, deportes, agro, eventos, clima y vías.</p>
-    {ultimaFecha && <span class="noticias-semana">{semanaDe(ultimaFecha)}</span>}
+    {ultimaFecha && <span class="noticias-semana" data-respaldo>{semanaDe(ultimaFecha)}</span>}
     {noticias.length > 0 ? (
       <div class:list={['noticias', { una: noticias.length === 1 }]}>
         <TarjetaNoticia noticia={noticias[0]} grande />
-        <div class="lista">{noticias.slice(1).map((n) => <TarjetaNoticia noticia={n} />)}</div>
+        <div class="noticias-derecha">
+          <!-- Las noticias de la semana quedan de respaldo si los titulares automáticos no cargan -->
+          <div class="lista" data-respaldo>{noticias.slice(1).map((n) => <TarjetaNoticia noticia={n} />)}</div>
+          <Titulares modo="portada" />
+        </div>
       </div>
     ) : (
-      <div class="vacio">
-        <strong>Muy pronto</strong>
-        <span>Aquí aparecerán cada semana las noticias de Mérida y de las regiones de Venezuela.</span>
-      </div>
+      <>
+        <div class="vacio" data-respaldo>
+          <strong>Muy pronto</strong>
+          <span>Aquí aparecerán cada semana las noticias de Mérida y de las regiones de Venezuela.</span>
+        </div>
+        <Titulares modo="portada" />
+      </>
     )}
   </section>
 

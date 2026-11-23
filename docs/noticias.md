@@ -1,17 +1,25 @@
-# Noticias semanales: «Venezuela ahora»
+# Noticias: «Venezuela ahora»
 
-Guía para armar cada semana las noticias del sitio. La usa la tarea programada de los lunes y
-cualquiera que agregue noticias a mano.
+La sección tiene dos partes:
 
-## Qué se publica
+1. **Titulares de las regiones (automáticos).** Un programa en el VPS lee cada 3 horas los feeds
+   de medios venezolanos, filtra lo que no va y publica titular, medio, fecha y enlace. No pasa
+   por nadie. Ver `vps/noticias-feed/README.md`.
+2. **Destacadas de Mérida (de la emisora).** Cada lunes, la tarea programada escribe 2 o 3
+   noticias de Mérida con palabras propias, siguiendo esta guía, y Miguel las aprueba.
 
-- **Cuándo:** cada lunes, con lo más destacado de la semana anterior (lunes a domingo).
-- **Cuántas:** de 6 a 8 noticias. **Al menos 2 de Mérida**, y el resto repartido entre regiones
-  distintas (no más de 2 de la misma región fuera de Mérida).
+Esta guía es para las destacadas y para cualquiera que agregue noticias a mano. Las reglas de
+«Qué no va» son las mismas que aplica el filtro automático (`vps/noticias-feed/filtros.json`).
+
+## Destacadas de Mérida
+
+- **Cuándo:** cada lunes, con lo mejor de la semana anterior (lunes a domingo).
+- **Cuántas:** 2 o 3, todas de Mérida (`region: merida`). `destacada: true` solo en la mejor:
+  es la que sale en grande en la portada.
 - **Temas permitidos** (campo `categoria`): agricultura, café, cultura, música, turismo, eventos,
   deportes, ciudad y clima y vías.
-- **Nada de política.** Si una noticia necesita un político, un partido o un conflicto para
-  entenderse, no va.
+- **Nada de política ni de religión.** Si una noticia necesita un político, un partido, un
+  conflicto o un tema religioso para entenderse, no va.
 
 ### Qué no va
 
@@ -21,6 +29,8 @@ cualquiera que agregue noticias a mano.
 - Sucesos: crímenes, accidentes con víctimas, detenciones, violencia.
 - Economía política: tipo de cambio, inflación, salarios, precios regulados.
 - Noticias de salud con diagnósticos o cifras sensibles.
+- **Religión:** vírgenes, santos, iglesias, misas, procesiones, fiestas patronales, Navidad,
+  Semana Santa ni ningún otro tema religioso (pedido expreso de Miguel).
 
 ### Clima y vías: qué sí y qué no
 
@@ -132,16 +142,17 @@ Texto con palabras propias.
 
 `borrador: true` siempre al crearla. La noticia aparece en el sitio cuando se cambia a `false`.
 
-## Flujo de cada semana
+## Flujo de cada semana (destacadas)
 
 1. Crear la rama `noticias-AAAA-MM-DD` (fecha del lunes) desde `main`.
-2. Buscar en las fuentes, elegir 6 a 8 noticias según esta guía y verificar cada dato en la nota
-   original.
+2. Buscar en las fuentes de Mérida, elegir 2 o 3 noticias según esta guía y verificar cada dato
+   en la nota original.
 3. Escribir los archivos con `borrador: true`.
 4. `npm run build` sin errores y subir la rama.
 5. Mandar a Miguel la lista (título, región y fuente de cada una) para que apruebe.
 6. Cuando Miguel diga «publica»: cambiar `borrador` a `false` en las aprobadas, volver a compilar
    y pasar la rama a `main`.
 
-Las noticias de semanas anteriores se quedan en `/noticias/`; la portada siempre muestra las más
-recientes (Mérida primero).
+Las noticias de semanas anteriores se quedan en `/noticias/`. En la portada sale en grande la
+destacada más reciente, y al lado los titulares automáticos (Mérida primero). Si el VPS no
+responde, al lado se ven las noticias de la emisora.

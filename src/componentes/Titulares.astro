@@ -1,0 +1,126 @@
+---
+// Titulares automáticos de «Venezuela ahora». Los arma el VPS cada 3 horas
+// (vps/noticias-feed/README.md) y el navegador los lee de titulares.feed.
+// Si el feed no responde, el bloque se queda escondido y se ve lo de respaldo
+// (las noticias de la semana escritas por la emisora).
+//   modo="portada": pocos titulares, Mérida primero y luego variedad de regiones.
+//   modo="todas":   todos, con botones para filtrar por región.
+import titulares from '../datos/titulares.json';
+import { NOMBRES_REGION } from '../lib/util.js';
+
+const { modo = 'portada', max = titulares.enPortada } = Astro.props;
+---
+<div class="titulares" data-titulares data-modo={modo} data-max={max} data-feed={titulares.feed}
+  data-bloquear={JSON.stringify(titulares.bloquear)} data-regiones={JSON.stringify(NOMBRES_REGION)} hidden>
+  <h3 class="titulares-cab">Titulares de las regiones</h3>
+  {modo === 'todas' && <div class="filtros" data-titulares-filtros></div>}
+  <ul class="titulares-lista" data-titulares-lista></ul>
+  <p class="titulares-nota">Titulares de medios venezolanos, actualizados cada 3 horas. Al tocar uno se abre la nota en el medio.</p>
+</div>
+
+<script is:inline>
+  (function () {
+    if (window.__titulares) return; // el script puede venir dos veces en la misma página
+    window.__titulares = true;
+
+    const hace = (iso) => {
+      const d = new Date(iso);
+      const h = Math.round((Date.now() - d) / 3600000);
+      if (isNaN(h)) return '';
+      if (h < 1) return 'hace un momento';
+      if (h < 24) return `hace ${h} h`;
+      const dias = Math.round(h / 24);
+      if (dias === 1) return 'ayer';
+      if (dias < 7) return `hace ${dias} días`;
+      return d.toLocaleDateString('es-VE', { day: 'numeric', month: 'short' });
+    };
+
+    // Portada: hasta 2 de Mérida, luego uno por región, luego los más nuevos
+    const elegir = (lista, max) => {
+      const elegidos = [];
+      const tomar = (t) => { if (elegidos.length < max && !elegidos.includes(t)) elegidos.push(t); };
+      lista.filter((t) => t.region === 'merida').slice(0, 2).forEach(tomar);
+      const vistas = new Set(['merida']);
+      lista.forEach((t) => { if (!vistas.has(t.region)) { vistas.add(t.region); tomar(t); } });
+      lista.forEach(tomar);
+      const merida = elegidos.filter((t) => t.region === 'merida');
+      return merida.concat(elegidos.filter((t) => t.region !== 'merida'));
+    };
+
+    const item = (t, regiones) => {
+      const li = document.createElement('li');
+      li.className = 'titular';
+      li.dataset.region = t.region;
+      const a = document.createElement('a');
+      a.href = t.enlace; a.target = '_blank'; a.rel = 'noopener';
+      const lugar = document.createElement('span');
+      lugar.className = 'titular-lugar';
+      lugar.dataset.region = t.region;
+      lugar.textContent = t.lugar || regiones[t.region] || 'Venezuela';
+      const meta = document.createElement('small');
+      meta.textContent = `${t.fuente} · ${hace(t.fecha)} ↗`;
+      const arriba = document.createElement('span');
+      arriba.className = 'titular-arriba';
+      arriba.append(lugar, meta);
+      const titulo = document.createElement('strong');
+      titulo.textContent = t.titulo;
+      a.append(arriba, titulo);
+      li.append(a);
+      return li;
+    };
+
+    const iniciar = () => document.querySelectorAll('[data-titulares]').forEach(async (caja) => {
+      try {
+        const res = await fetch(caja.dataset.feed, { cache: 'no-cache' });
+        if (!res.ok) throw new Error(res.status);
+        const datos = await res.json();
+        const bloquear = new Set(JSON.parse(caja.dataset.bloquear || '[]'));
+        const regiones = JSON.parse(caja.dataset.regiones || '{}');
+        const lista = (datos.titulares || [])
+          .filter((t) => t && t.titulo && /^https?:\/\//.test(t.enlace) && !bloquear.has(t.enlace))
+          .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        if (!lista.length) return;
+
+        const modo = caja.dataset.modo;
+        const ul = caja.querySelector('[data-titulares-lista]');
+        const mostrar = modo === 'portada' ? elegir(lista, Number(caja.dataset.max) || 5) : lista;
+        mostrar.forEach((t) => ul.append(item(t, regiones)));
+
+        // Filtro por región (solo en /noticias/)
+        const barra = caja.querySelector('[data-titulares-filtros]');
+        if (barra) {
+          const cuenta = {};
+          lista.forEach((t) => { cuenta[t.region] = (cuenta[t.region] || 0) + 1; });
+          const boton = (f, texto, n) => {
+            const b = document.createElement('button');
+            b.type = 'button'; b.dataset.f = f; b.textContent = texto + ' ';
+            const s = document.createElement('span'); s.textContent = n; b.append(s);
+            return b;
+          };
+          const todas = boton('', 'Todas', lista.length); todas.classList.add('activo');
+          barra.append(todas);
+          Object.keys(regiones).filter((r) => cuenta[r]).forEach((r) => barra.append(boton(r, regiones[r], cuenta[r])));
+          if (barra.children.length < 3) barra.remove();
+          barra.addEventListener('click', (e) => {
+            const b = e.target.closest('button');
+            if (!b) return;
+            barra.querySelectorAll('button').forEach((x) => x.classList.toggle('activo', x === b));
+            ul.querySelectorAll('.titular').forEach((li) => { li.hidden = Boolean(b.dataset.f) && li.dataset.region !== b.dataset.f; });
+          });
+        }
+
+        caja.hidden = false;
+        // En la portada, los titulares reemplazan la lista de respaldo
+        const seccion = caja.closest('section');
+        if (modo === 'portada' && seccion) {
+          seccion.querySelectorAll('[data-respaldo]').forEach((el) => { el.hidden = true; });
+          seccion.classList.add('con-titulares');
+        }
+      } catch (e) {
+        // Sin feed: queda lo de respaldo
+      }
+    });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
+    else iniciar();
+  })();
+</script>
