@@ -18,6 +18,7 @@ sitio del medio.
 | `filtros.json` | Palabras que bloquean, temas permitidos y lugares para saber la región |
 | `noticias-feed.service` / `.timer` | Lo corren cada 3 horas |
 | `noticias-feed.env` | Opciones (días hacia atrás, máximos) |
+| `caddy-feed.sh` | Configura Caddy para servir `/feed/` (una sola vez) |
 
 ## Instalar
 
@@ -47,6 +48,22 @@ systemctl daemon-reload
 systemctl start noticias-feed.service
 systemctl enable --now noticias-feed.timer
 ```
+
+Caddy tiene que servir la carpeta `/var/www/feed` en `/feed/` (si no, la página recibe un 404
+y no muestra los titulares). Si todavía no está, en el VPS:
+
+```bash
+bash /opt/noticias-feed/caddy-feed.sh
+```
+
+o, desde PowerShell, sin copiar nada:
+
+```
+ssh root@64.176.5.192 'curl -fsSL https://raw.githubusercontent.com/mifox53/interactiva-web/main/vps/noticias-feed/caddy-feed.sh | bash'
+```
+
+Agrega el bloque de `/feed/` al Caddyfile sin tocar lo de la radio, guarda una copia del archivo
+anterior, valida antes de recargar y al final comprueba el feed y la radio.
 
 Ver el resultado: `https://interactiva.duckdns.org/feed/noticias.json`. La página lo toma sola:
 en la portada, la sección «Venezuela ahora» muestra los titulares en vez de la lista de la semana.
