@@ -10,8 +10,11 @@ Solo se publica el titular tal como lo escribió el medio, el nombre del medio, 
 enlace a la nota: ni resúmenes ni fotos. El lector siempre termina en el sitio del medio.
 
 Uso:
-  python3 actualizar_noticias.py            actualiza el JSON
+  python3 actualizar_noticias.py            actualiza el JSON (y deja el informe en /var/lib/noticias-feed/informe.txt)
   python3 actualizar_noticias.py --probar   muestra qué publicaría y qué descarta, sin escribir
+
+Para no molestar a los medios espera unos segundos entre pedidos al mismo sitio. Si un medio
+no responde (caído o «demasiados pedidos»), usa la última copia buena de su feed.
 
 Configuración opcional en /etc/noticias-feed.env (ver noticias-feed.env).
 Para esconder un titular al momento: poner su enlace (o una palabra) en una línea de
@@ -20,13 +23,17 @@ src/datos/titulares.json → bloquear.
 Solo usa la librería estándar de Python 3.
 """
 import email.utils
+import hashlib
 import html
 import json
 import os
 import re
 import sys
 import tempfile
+import time
 import unicodedata
+import urllib.error
+import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
@@ -39,6 +46,8 @@ SALIDA = os.environ.get("SALIDA", "/var/www/feed/noticias.json")
 DIAS = int(os.environ.get("DIAS", "7"))
 MAX_TOTAL = int(os.environ.get("MAX_TOTAL", "40"))
 MAX_POR_FUENTE = int(os.environ.get("MAX_POR_FUENTE", "8"))
+CACHE = os.environ.get("CACHE", "/var/lib/noticias-feed")  # copias de los feeds e informe
+PAUSA = float(os.environ.get("PAUSA", "10"))  # segundos entre pedidos al mismo sitio
 AGENTE = "iNteractiva-titulares/1.0 (+https://interactiva.com.ve)"
 ZONA = timezone(timedelta(hours=-4))  # Venezuela
 
@@ -75,10 +84,53 @@ def cargar_bloqueadas():
     return enlaces, patron(palabras)
 
 
+_ultimo_pedido = {}
+
+
 def descargar(url):
-    req = urllib.request.Request(url, headers={"User-Agent": AGENTE, "Accept": "application/rss+xml, application/xml, text/xml"})
-    with urllib.request.urlopen(req, timeout=25) as r:
-        return r.read()
+    """Pide el feed con calma: una pausa entre pedidos al mismo sitio y un reintento si
+    el sitio responde «demasiados pedidos» (429) o «no disponible» (503)."""
+    sitio = urllib.parse.urlsplit(url).hostname
+    for intento in (1, 2):
+        espera = _ultimo_pedido.get(sitio, -PAUSA) + PAUSA - time.monotonic()
+        if espera > 0:
+            time.sleep(espera)
+        _ultimo_pedido[sitio] = time.monotonic()
+        req = urllib.request.Request(url, headers={"User-Agent": AGENTE, "Accept": "application/rss+xml, application/xml, text/xml"})
+        try:
+            with urllib.request.urlopen(req, timeout=25) as r:
+                return r.read()
+        except urllib.error.HTTPError as e:
+            if e.code not in (429, 503) or intento == 2:
+                raise
+            pedida = (e.headers.get("Retry-After") or "").strip()
+            time.sleep(min(int(pedida) if pedida.isdigit() else 30, 60))
+
+
+def obtener(url):
+    """Devuelve (items, nota). Si el medio no responde, usa la última copia buena del feed
+    (si tiene menos de DIAS días) y lo dice en la nota."""
+    copia = os.path.join(CACHE, "copias", hashlib.sha1(url.encode()).hexdigest()[:16] + ".xml")
+    try:
+        datos = descargar(url)
+        items = leer_feed(datos)
+    except Exception as e:
+        try:
+            horas = (time.time() - os.path.getmtime(copia)) / 3600
+            if horas < DIAS * 24:
+                with open(copia, "rb") as f:
+                    return leer_feed(f.read()), f"{e.__class__.__name__}: {e}; uso la copia de hace {horas:.0f} h"
+        except OSError:
+            pass
+        raise
+    try:
+        os.makedirs(os.path.dirname(copia), exist_ok=True)
+        with open(copia + ".tmp", "wb") as f:
+            f.write(datos)
+        os.replace(copia + ".tmp", copia)
+    except OSError:
+        pass
+    return items, None
 
 
 def fecha_de(texto):
@@ -123,6 +175,7 @@ def leer_feed(datos):
 class Filtro:
     def __init__(self, reglas):
         self.bloquear = patron(reglas["bloquear"])
+        self.bloquear_titulo = patron(reglas.get("bloquear_solo_titulo", []))
         self.regex = [re.compile(r) for r in reglas.get("bloquear_regex", [])]
         self.secciones = {normal(s) for s in reglas.get("secciones_bloqueadas", [])}
         self.temas = [(cat, patron(palabras)) for cat, palabras in reglas["temas"].items()]
@@ -132,7 +185,7 @@ class Filtro:
             for nombre in nombres:
                 self.lugares.append((region, nombre, patron([nombre])))
 
-    def motivo_descarte(self, item, ignorar=()):
+    def motivo_descarte(self, item, ignorar=(), usar_categorias=True):
         cats = {normal(c) for c in item["categorias"]} - {normal(c) for c in ignorar}
         if cats & self.secciones:
             return "sección: " + ", ".join(sorted(cats & self.secciones))
@@ -140,8 +193,11 @@ class Filtro:
         for r in self.regex:
             if r.search(titulo):
                 return "forma de declaración u opinión"
-        todo = normal(" ".join([item["titulo"], item["texto"], " ".join(item["categorias"])]))
-        m = self.bloquear.search(todo) if self.bloquear else None
+        m = self.bloquear_titulo.search(titulo) if self.bloquear_titulo else None
+        if m:
+            return "palabra en el titular: " + m.group(1)
+        partes = [item["titulo"], item["texto"]] + (item["categorias"] if usar_categorias else [])
+        m = self.bloquear.search(normal(" ".join(partes))) if self.bloquear else None
         if m:
             return "palabra: " + m.group(1)
         return None
@@ -179,10 +235,11 @@ def main():
     for fuente in fuentes:
         nombre, url = fuente["nombre"], fuente["feed"]
         try:
-            items = leer_feed(descargar(url))
+            items, nota = obtener(url)
         except Exception as e:  # una fuente caída no detiene a las demás
             resumen.append(f"  ✗ {nombre} ({url}): {e.__class__.__name__}: {e}")
             continue
+        usar_categorias = fuente.get("usar_categorias", True)
         tomados, descartes = 0, []
         for item in sorted(items, key=lambda i: i["fecha"] or limite, reverse=True):
             if not item["titulo"] or not item["enlace"].startswith("http"):
@@ -192,12 +249,14 @@ def main():
             clave_titulo = normal(item["titulo"])[:70]
             if item["enlace"] in vistos_enlace or clave_titulo in vistos_titulo:
                 continue
-            motivo = filtro.motivo_descarte(item, fuente.get("ignorar_secciones", []))
+            motivo = filtro.motivo_descarte(item, fuente.get("ignorar_secciones", []), usar_categorias)
+            # medios que ponen las mismas categorías a todo: tema y lugar salen solo del texto
+            vista = item if usar_categorias else dict(item, categorias=[])
             if not motivo and item["enlace"] in enlaces_bloqueados:
                 motivo = "bloqueado a mano"
             if not motivo and palabras_bloqueadas and palabras_bloqueadas.search(normal(item["titulo"])):
                 motivo = "palabra bloqueada a mano"
-            categoria = filtro.tema(item)
+            categoria = filtro.tema(vista)
             if not motivo and not categoria:
                 if fuente.get("seguro"):
                     categoria = fuente.get("categoria", "cultura")
@@ -208,7 +267,7 @@ def main():
                 continue
             if tomados >= MAX_POR_FUENTE:
                 continue
-            region, lugar = filtro.lugar(item, fuente.get("region", "nacional"))
+            region, lugar = filtro.lugar(vista, fuente.get("region", "nacional"))
             elegidos.append({
                 "titulo": item["titulo"],
                 "enlace": item["enlace"],
@@ -221,20 +280,23 @@ def main():
             vistos_enlace.add(item["enlace"])
             vistos_titulo.add(clave_titulo)
             tomados += 1
-        resumen.append(f"  ✓ {nombre} ({url}): {len(items)} en el feed, {tomados} publicados, {len(descartes)} descartados")
-        if probar:
-            for titulo, motivo in descartes[:15]:
-                resumen.append(f"      descartado [{motivo}] {titulo}")
+        marca = "↺" if nota else "✓"
+        resumen.append(f"  {marca} {nombre} ({url}): {len(items)} en el feed, {tomados} publicados, {len(descartes)} descartados")
+        if nota:
+            resumen.append(f"      ({nota})")
+        for titulo, motivo in descartes[:15]:
+            resumen.append(f"      descartado [{motivo}] {titulo}")
 
     elegidos.sort(key=lambda x: x["fecha"], reverse=True)
     elegidos = elegidos[:MAX_TOTAL]
 
-    print(f"Titulares: {len(elegidos)} publicados de {len(fuentes)} fuentes")
-    print("\n".join(resumen))
+    informe = [f"Titulares: {len(elegidos)} publicados de {len(fuentes)} fuentes"] + resumen
+    informe.append("\nLo que se publicaría:" if probar else "\nPublicado:")
+    for e in elegidos:
+        informe.append(f"  [{e['region']}/{e['categoria']}] {e['titulo']} — {e['fuente']} {e['fecha'][:10]} {e['lugar']}")
+    informe = "\n".join(informe)
+    print(informe)
     if probar:
-        print("\nLo que se publicaría:")
-        for e in elegidos:
-            print(f"  [{e['region']}/{e['categoria']}] {e['titulo']} — {e['fuente']} {e['fecha'][:10]} {e['lugar']}")
         return
 
     datos = {"generado": ahora.astimezone(ZONA).isoformat(timespec="minutes"), "titulares": elegidos}
@@ -244,6 +306,12 @@ def main():
         json.dump(datos, f, ensure_ascii=False, indent=1)
     os.chmod(tmp, 0o644)
     os.replace(tmp, SALIDA)
+    try:
+        os.makedirs(CACHE, exist_ok=True)
+        with open(os.path.join(CACHE, "informe.txt"), "w", encoding="utf-8") as f:
+            f.write(datos["generado"] + "\n" + informe + "\n")
+    except OSError:
+        pass
 
 
 if __name__ == "__main__":

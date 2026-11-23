@@ -73,10 +73,21 @@ copiar el archivo al VPS (`scp vps/noticias-feed/filtros.json root@64.176.5.192:
 Cuando cambien `filtros.json`, `fuentes.json` o el programa en el repositorio, en PowerShell:
 
 ```
-ssh root@64.176.5.192 'set -e; B=https://raw.githubusercontent.com/mifox53/interactiva-web/main/vps/noticias-feed; cd /opt/noticias-feed; for f in actualizar_noticias.py fuentes.json filtros.json; do curl -fsSLO $B/$f; done; python3 -I actualizar_noticias.py --probar; systemctl start noticias-feed.service; echo LISTO'
+ssh root@64.176.5.192 'set -e; B=https://raw.githubusercontent.com/mifox53/interactiva-web/main/vps/noticias-feed; cd /opt/noticias-feed; for f in actualizar_noticias.py fuentes.json filtros.json; do curl -fsSLO $B/$f; done; systemctl start noticias-feed.service; cat /var/lib/noticias-feed/informe.txt'
 ```
 
-Muestra la prueba y deja publicados los titulares nuevos al momento.
+Publica los titulares nuevos al momento y muestra el informe: qué se publicó y qué se descartó
+(y por qué). Conviene no correr `--probar` justo antes, porque así se le pide todo dos veces a
+cada medio y alguno puede cortarnos por «demasiados pedidos» (error 429).
+
+Para ver el informe de la última vuelta automática sin cambiar nada:
+
+```
+ssh root@64.176.5.192 cat /var/lib/noticias-feed/informe.txt
+```
+
+Si un medio sale con ↺, no respondió y se usó la última copia buena de su feed (se guardan en
+`/var/lib/noticias-feed/copias/`). Con ✗ no había copia: se recupera solo en la siguiente vuelta.
 
 ## Reglas de uso de las fuentes
 

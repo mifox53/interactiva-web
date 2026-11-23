@@ -1,5 +1,5 @@
 {
-  "_ayuda": "Feeds RSS que lee el VPS cada 3 horas. region: la que se usa si el titular no nombra un lugar conocido. seguro: true solo para feeds de secciones sin política (deportes, cultura); en los demás el titular necesita una palabra de tema (ver filtros.json). verificado: si ya se comprobó que el feed responde. Para quitar una fuente, poner activo: false. ignorar_secciones: categorías que un medio pone a todas sus notas (por ejemplo Calletacarigua.com marca todo como mundo, política y sucesos); para ese medio no cuentan.",
+  "_ayuda": "Feeds RSS que lee el VPS cada 3 horas. region: la que se usa si el titular no nombra un lugar conocido. seguro: true solo para feeds de secciones sin política (deportes, cultura); en los demás el titular necesita una palabra de tema (ver filtros.json). verificado: si ya se comprobó que el feed responde. Para quitar una fuente, poner activo: false. ignorar_secciones: categorías que un medio pone a todas sus notas (por ejemplo Calletacarigua.com marca todo como mundo, política y sucesos); para ese medio no cuentan. usar_categorias: false para medios que ponen las mismas categorías a todas sus notas (Calletacarigua.com marca todo como deportes, Sucre, etc.): el tema y el lugar salen solo del titular.",
   "fuentes": [
     {
       "nombre": "Diario de Los Andes",
@@ -52,7 +52,8 @@
         "mundo",
         "politica",
         "sucesos"
-      ]
+      ],
+      "usar_categorias": false
     },
     {
       "nombre": "El Pitazo",

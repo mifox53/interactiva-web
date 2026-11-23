@@ -1,5 +1,5 @@
 {
-  "_ayuda": "Reglas del filtro de titulares. Todo se compara en minúsculas y sin acentos, y cada palabra cuenta como comienzo de palabra: 'protest' detecta 'protesta' y 'protestan'. bloquear: si aparece en el titular, el resumen o las categorías del medio, el titular no se publica. secciones_bloqueadas: categorías del medio que se descartan enteras. temas: un titular solo se publica si tiene al menos una palabra de algún tema (salvo feeds marcados seguro). lugares: para saber la región; nacional va primero porque 'Leones del Caracas' no es noticia de Caracas. bloquear_regex: formas de titular que se descartan (declaraciones tipo 'Nombre: “…”' y columnas 'Por:'). El tema se busca solo en el titular y las categorías del medio.",
+  "_ayuda": "Reglas del filtro de titulares. Todo se compara en minúsculas y sin acentos, y cada palabra cuenta como comienzo de palabra: 'protest' detecta 'protesta' y 'protestan'. bloquear: si aparece en el titular, el resumen o las categorías del medio, el titular no se publica. secciones_bloqueadas: categorías del medio que se descartan enteras. temas: un titular solo se publica si tiene al menos una palabra de algún tema (salvo feeds marcados seguro). lugares: para saber la región; nacional va primero porque 'Leones del Caracas' no es noticia de Caracas. bloquear_regex: formas de titular que se descartan (declaraciones tipo 'Nombre: “…”' y columnas 'Por:'). El tema se busca solo en el titular y las categorías del medio. bloquear_solo_titulo: palabras que solo descartan si están en el titular (en el resumen aparecen de pasada: «capturó la hazaña», «contrato de X dólares»).",
   "bloquear": [
     "gobierno",
     "gobernador",
@@ -49,7 +49,6 @@
     "preso",
     "detenid",
     "detencion",
-    "captur",
     "arrest",
     "fiscal",
     "ministerio publico",
@@ -96,7 +95,6 @@
     "pension",
     "jubilad",
     "inflacion",
-    "dolar",
     "bcv",
     "tasa de cambio",
     "devaluacion",
@@ -220,7 +218,15 @@
     "vulneraci",
     "organizacion ciudadana",
     "sindicat",
-    "gremio"
+    "gremio",
+    "loteri",
+    "apuesta",
+    "casino",
+    "palabra oportuna"
+  ],
+  "bloquear_solo_titulo": [
+    "captur",
+    "dolar"
   ],
   "bloquear_regex": [
     "^[^:|]{3,40}:\\s*[\"“«]",
@@ -303,7 +309,15 @@
       "caribes",
       "bravos de margarita",
       "estudiantes de merida",
-      "podio"
+      "podio",
+      "bateo",
+      "batazo",
+      "jonron",
+      "pelotero",
+      "grandes ligas",
+      "mlb",
+      "lanzador",
+      "serie del caribe"
     ],
     "musica": [
       "musica",
