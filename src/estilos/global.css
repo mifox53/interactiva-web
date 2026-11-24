@@ -362,3 +362,25 @@ footer{margin-top:56px;border-top:1px solid var(--line);padding:32px 0 24px}
 .clip-txt a:hover{text-decoration:underline}
 @media (max-width:980px){.vitrina{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:600px){.vitrina.desliza{display:flex}.vitrina.desliza>*{flex-basis:62%}.clip-marco,.clip-video{max-height:360px}}
+
+/* ===== Mascota (nombre e imágenes en src/datos/sitio.json -> mascota) ===== */
+/* En la barra del reproductor, sobresaliendo un poco por arriba; cuando suena la radio, se mueve al ritmo */
+.dock-artie{flex:none;width:64px;height:64px;margin:-30px -2px 0 0;pointer-events:none;transform-origin:50% 90%;filter:drop-shadow(0 -3px 8px rgba(0,0,0,.4))}
+.dock[data-modo="sonando"] .dock-artie{animation:artie-baila .9s ease-in-out infinite}
+@keyframes artie-baila{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-5px)}}
+/* Al lado del texto de «Anúnciate» */
+.con-artie{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:24px;align-items:center}
+.con-artie .bajada{grid-column:1}
+.artie-lado{grid-column:2;grid-row:1 / span 2;height:220px;width:auto;filter:drop-shadow(0 8px 26px rgba(139,61,255,.35))}
+/* Página de error */
+.error404{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center;min-height:60vh}
+.error404-artie{height:min(420px,55vh);width:auto;filter:drop-shadow(0 10px 34px rgba(139,61,255,.4))}
+.error404 h1{margin-bottom:14px}
+.error404 .bajada{max-width:52ch;margin-bottom:22px}
+@media (prefers-reduced-motion:reduce){.dock[data-modo="sonando"] .dock-artie{animation:none}}
+@media (max-width:600px){
+  .dock-artie{width:54px;height:54px;margin-top:-26px}
+  .con-artie{column-gap:12px}.con-artie-btn{grid-column:1 / -1!important}.artie-lado{grid-row:1;height:140px}
+  .error404{grid-template-columns:1fr;gap:18px;text-align:center;justify-items:center}
+  .error404-artie{height:240px}.error404 .hero-acc{justify-content:center}
+}

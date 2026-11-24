@@ -9,6 +9,7 @@ para cambiar algo casi siempre se toca **un solo archivo pequeño**.
 |---|---|
 | Nombre, lema, slogan, logo, WhatsApp, correo, redes, reproductor | `src/datos/sitio.json` |
 | El archivo del logo | `public/img/logo.webp` (o cambiar la ruta en `sitio.json`) |
+| La mascota (Artie): nombre e imágenes | `src/datos/sitio.json` → `mascota` (cuerpo entero `public/img/artie.webp`, cabeza `public/img/artie-cara.webp`, sin fondo). Sale en la barra del reproductor, en Anúnciate y en la página de error. Para quitarla de todo el sitio, borrar `mascota` de `sitio.json` |
 | Patrocinantes: agregar, quitar, rotar, fechas, espacio que ocupan | `src/datos/patrocinantes.json` |
 | Programación | `src/datos/programacion.json` |
 | Noticias | un archivo `.md` por noticia en `src/contenido/noticias/` |

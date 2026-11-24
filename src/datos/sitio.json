@@ -9,6 +9,11 @@
   "logo": "/img/logo.webp",
   "favicon": "/favicon-192x192.png",
   "imagenCompartir": "/img/compartir.jpg",
+  "mascota": {
+    "nombre": "Artie",
+    "cuerpo": "/img/artie.webp",
+    "cara": "/img/artie-cara.webp"
+  },
   "whatsapp": "584149772646",
   "whatsappTexto": "+58 414-977-2646",
   "correo": "interactiva897@gmail.com",

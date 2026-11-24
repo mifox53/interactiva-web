@@ -5,7 +5,7 @@ import sitio from '../datos/sitio.json';
 const r = sitio.reproductor;
 ---
 <div class="dock" id="en-vivo" data-stream={r.stream} data-estado={r.estado}>
-  <div class="dock-info"><span class="punto"></span><div><strong>En vivo</strong><small>{sitio.nombre}</small></div></div>
+  <div class="dock-info">{sitio.mascota && <img class="dock-artie" src={sitio.mascota.cara} alt="" width="160" height="160" decoding="async" />}<span class="punto"></span><div><strong>En vivo</strong><small>{sitio.nombre}</small></div></div>
   <div class="dock-player">
     <button class="dock-play" type="button" aria-label="Reproducir la radio" title="Reproducir">
       <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
