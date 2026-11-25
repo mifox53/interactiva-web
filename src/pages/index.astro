@@ -7,6 +7,7 @@ import FichaArtista from '../componentes/FichaArtista.astro';
 import ArtistaSemana from '../componentes/ArtistaSemana.astro';
 import Vitrina from '../componentes/Vitrina.astro';
 import Titulares from '../componentes/Titulares.astro';
+import Alianza from '../componentes/Alianza.astro';
 import MarcaAgua from '../componentes/MarcaAgua.astro';
 import sitio from '../datos/sitio.json';
 import patro from '../datos/patrocinantes.json';
@@ -123,6 +124,7 @@ const fichasLibres = enPortada.length % 4 === 0 ? 0 : 4 - (enPortada.length % 4)
         <Titulares modo="portada" />
       </>
     )}
+    <Alianza />
   </section>
 
   <!-- ============ ARTISTAS ============ -->
