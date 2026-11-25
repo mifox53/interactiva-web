@@ -2,7 +2,7 @@
   "_ayuda": "Marca de agua del fondo de la portada (arriba, detrás del título). 'imagen' es el dibujo de fondo. 'foto' es una foto de persona que sale suave detrás del título (va en public/img/marca-agua/, con permiso para usarla); vacía = no sale. 'nombre' y 'pie' forman el letrero que acompaña la foto ({emisora} se cambia por el nombre de la emisora). 'credito' es quién tomó o cedió la foto. 'desde' / 'hasta' (formato 2026-12-31): sale solo en esas fechas; vacío = sin límite. 'activo': false la quita.",
   "activo": true,
   "motivo": "Venezuela en el Miss Universo 2026",
-  "imagen": "/img/marca-agua/corona-venezuela.svg",
+  "imagen": "/img/marca-agua/tiara-miss-universo.svg",
   "foto": "",
   "nombre": "Clara Vegas",
   "pie": "Miss Venezuela en el Miss Universo 2026",

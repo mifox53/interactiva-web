@@ -25,7 +25,7 @@ const pieTxt = (ma.pie || '').replaceAll('{emisora}', sitio.nombre);
 
 <style>
   .ma{position:absolute;inset:-56px -30px -40px -80px;z-index:-1;pointer-events:none}
-  .ma-dibujo{position:absolute;left:55%;top:48%;width:min(500px,95vw);transform:translate(-50%,-50%) rotate(-6deg);opacity:.085}
+  .ma-dibujo{position:absolute;left:55%;top:48%;width:min(500px,95vw);transform:translate(-50%,-50%);opacity:.1}
   .ma-foto{position:absolute;left:0;bottom:0;height:100%;width:62%;object-fit:cover;object-position:top center;opacity:.32;
     -webkit-mask-image:radial-gradient(70% 75% at 45% 40%,#000 45%,transparent 100%);mask-image:radial-gradient(70% 75% at 45% 40%,#000 45%,transparent 100%)}
   .ma.con-foto .ma-dibujo{left:72%;width:min(400px,80vw);opacity:.1}
@@ -34,7 +34,7 @@ const pieTxt = (ma.pie || '').replaceAll('{emisora}', sitio.nombre);
   .ma-credito{margin-left:6px;font-size:.68rem;opacity:.75}
   @media (max-width:980px){
     .ma{inset:-34px -20px -16px -20px}
-    .ma-dibujo,.ma.con-foto .ma-dibujo{left:auto;right:-50px;width:340px;transform:translateY(-50%) rotate(-6deg)}
+    .ma-dibujo,.ma.con-foto .ma-dibujo{left:auto;right:-50px;width:340px;transform:translateY(-50%)}
     .ma-foto{width:75%}
   }
 </style>
