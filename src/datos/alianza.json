@@ -1,0 +1,13 @@
+{
+  "_ayuda": "Renglón 'Alianza iNformativa de NotiNteractiva' que sale debajo de las noticias (portada y /noticias/). El botón lleva al Instagram de NotiNteractiva. Para agregar otro aliado, copiar un bloque en 'aliados'. 'activo': false lo saca sin borrarlo. Si no queda ningún aliado activo, el renglón no se muestra.",
+  "titulo": "Alianza iNformativa de NotiNteractiva",
+  "instagram": "notinteractiva",
+  "aliados": [
+    {
+      "nombre": "Solo Éxitos",
+      "conductor": "Braulio Morales",
+      "dias": "Lunes a viernes",
+      "activo": true
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import TarjetaNoticia from '../../componentes/TarjetaNoticia.astro';
 import Titulares from '../../componentes/Titulares.astro';
+import Alianza from '../../componentes/Alianza.astro';
 import { NOMBRES_REGION } from '../../lib/util.js';
 import { REGIONES } from '../../content.config';
 
@@ -31,6 +32,7 @@ const regiones = REGIONES.filter((r) => cuenta[r]);
       <div class="vacio" data-respaldo><strong>Muy pronto</strong><span>Aquí aparecerán cada semana las noticias de Mérida y de las regiones de Venezuela.</span></div>
     )}
     <div class="noticias-titulares"><Titulares modo="todas" /></div>
+    <Alianza />
     <a class="volver" href="/">← Volver al inicio</a>
   </section>
 

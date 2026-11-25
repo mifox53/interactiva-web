@@ -1,0 +1,36 @@
+---
+// Renglón "Alianza iNformativa de NotiNteractiva": los podcasts aliados de las noticias,
+// con un botón al Instagram de NotiNteractiva. Todo se cambia en src/datos/alianza.json.
+import alianza from '../datos/alianza.json';
+
+const aliados = alianza.aliados.filter((a) => a.activo !== false);
+const url = `https://www.instagram.com/${alianza.instagram}/`;
+---
+{aliados.length > 0 && (
+  <div class="alianza">
+    <span class="alianza-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8" /></svg>
+    </span>
+    <p class="alianza-txt">
+      <strong>{alianza.titulo}:</strong>
+      {aliados.map((a) => (
+        <span class="alianza-aliado"><em>{a.nombre}</em>{a.conductor && <> con {a.conductor}</>}{a.dias && <> · {a.dias}</>}</span>
+      ))}
+    </p>
+    <a class="btn alianza-btn" href={url} target="_blank" rel="noopener">@{alianza.instagram} en Instagram →</a>
+  </div>
+)}
+
+<style>
+  .alianza{display:flex;align-items:center;gap:16px;margin-top:28px;padding:14px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg2)}
+  .alianza-ico{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--grad);color:#fff}
+  .alianza-txt{flex:1;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;font-size:.92rem;color:var(--mut)}
+  .alianza-txt strong{color:var(--txt);font-weight:800}
+  .alianza-aliado em{font-style:normal;font-weight:700;color:var(--cyan)}
+  .alianza-aliado + .alianza-aliado::before{content:'·';margin-right:12px}
+  @media (max-width:600px){
+    .alianza{flex-wrap:wrap;gap:12px}
+    .alianza-txt{flex-basis:calc(100% - 58px)}
+    .alianza-btn{width:100%;white-space:normal}
+  }
+</style>
