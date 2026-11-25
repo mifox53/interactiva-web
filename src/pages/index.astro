@@ -8,6 +8,7 @@ import ArtistaSemana from '../componentes/ArtistaSemana.astro';
 import Vitrina from '../componentes/Vitrina.astro';
 import Titulares from '../componentes/Titulares.astro';
 import Alianza from '../componentes/Alianza.astro';
+import MarcaAgua from '../componentes/MarcaAgua.astro';
 import sitio from '../datos/sitio.json';
 import patro from '../datos/patrocinantes.json';
 import programacion from '../datos/programacion.json';
@@ -55,7 +56,8 @@ const fichasLibres = enPortada.length % 4 === 0 ? 0 : 4 - (enPortada.length % 4)
   <div class="hero" id="inicio">
     <div class="wrap">
       <div class="hero-grid">
-        <div>
+        <div class="hero-txt">
+          <MarcaAgua />
           <span class="k">{sitio.lema}</span>
           <h1>La radio que le da <em>PLAY</em> a los artistas.</h1>
           <p class="sub">{sitio.slogan2} {sitio.alcance}</p>
@@ -64,6 +66,7 @@ const fichasLibres = enPortada.length % 4 === 0 ? 0 : 4 - (enPortada.length % 4)
             <a class="btn lleno" href="#en-vivo">▶ Escuchar en vivo</a>
             <a class="btn" href="#artistas">Conoce a los artistas</a>
           </div>
+          <MarcaAgua pie />
         </div>
         <div class="escena" aria-label="Artistas de iNteractiva" data-portada>
           {portada.map((c, i) => (

@@ -1,0 +1,49 @@
+---
+// Marca de agua de la portada: un dibujo suave detrás del título (y una foto, si hay permiso)
+// y un letrero dorado debajo de los botones. Todo se cambia en src/datos/marca-agua.json.
+//   <MarcaAgua />      el fondo (dibujo y foto)
+//   <MarcaAgua pie />  el letrero: título, nombre y frase
+import ma from '../datos/marca-agua.json';
+
+const { pie = false } = Astro.props;
+const activa = ma.activo !== false;
+const conTexto = ma.titulo || ma.nombre || ma.frase;
+---
+{activa && !pie && (ma.imagen || ma.foto) && (
+  <div class:list={['ma', { 'con-foto': ma.foto }]} data-desde={ma.desde || undefined} data-hasta={ma.hasta || undefined} aria-hidden="true">
+    {ma.imagen && <img class="ma-dibujo" src={ma.imagen} alt="" />}
+    {ma.foto && <img class="ma-foto" src={ma.foto} alt="" />}
+  </div>
+)}
+{activa && pie && conTexto && (
+  <div class="ma-pie" data-desde={ma.desde || undefined} data-hasta={ma.hasta || undefined}>
+    {ma.titulo && <span class="ma-titulo"><span aria-hidden="true">👑</span> {ma.titulo}</span>}
+    {ma.nombre && <strong class="ma-nombre">{ma.nombre}</strong>}
+    {ma.frase && <span class="ma-frase">{ma.frase}</span>}
+    {ma.foto && ma.credito && <small class="ma-credito">Foto: {ma.credito}</small>}
+  </div>
+)}
+
+<style>
+  .ma{position:absolute;inset:-56px -30px -40px -80px;z-index:-1;pointer-events:none}
+  .ma-dibujo{position:absolute;left:55%;top:48%;width:min(500px,95vw);transform:translate(-50%,-50%);opacity:.1}
+  .ma-foto{position:absolute;left:0;bottom:0;height:100%;width:62%;object-fit:cover;object-position:top center;opacity:.32;
+    -webkit-mask-image:radial-gradient(70% 75% at 45% 40%,#000 45%,transparent 100%);mask-image:radial-gradient(70% 75% at 45% 40%,#000 45%,transparent 100%)}
+  .ma.con-foto .ma-dibujo{left:72%;width:min(400px,80vw);opacity:.1}
+
+  /* Letrero dorado: se lee, pero suave, como parte de la marca de agua */
+  .ma-pie{--oro:#f2d98d;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin-top:22px;padding-top:14px;border-top:1px solid rgba(242,217,141,.25);max-width:520px}
+  .ma-titulo{flex-basis:100%;font-size:.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--oro);opacity:.85}
+  .ma-nombre{font-size:1.45rem;font-weight:800;font-style:italic;letter-spacing:-.01em;color:var(--oro)}
+  .ma-frase{font-size:.95rem;font-style:italic;color:#e9e1c8;opacity:.85}
+  .ma-credito{flex-basis:100%;font-size:.66rem;color:var(--mut);opacity:.75}
+  @media (max-width:980px){
+    .ma{inset:-34px -20px -16px -20px}
+    .ma-dibujo,.ma.con-foto .ma-dibujo{left:auto;right:-50px;width:340px;transform:translateY(-50%)}
+    .ma-foto{width:75%}
+  }
+  @media (max-width:600px){
+    .ma-pie{flex-direction:column;align-items:flex-start;gap:2px}
+    .ma-nombre{font-size:1.3rem}
+  }
+</style>

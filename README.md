@@ -18,6 +18,7 @@ para cambiar algo casi siempre se toca **un solo archivo pequeño**.
 | Eventos y saludos | un archivo `.md` por evento en `src/contenido/eventos/` |
 | Vitrina (videos de emprendedores) | se llena sola desde Instagram; ver sección Vitrina |
 | Texto de "Nosotros" | `src/datos/sitio.json` → `nosotros` |
+| Marca de agua de la portada (dibujo de fondo, letrero con título, nombre y frase, foto opcional, fechas) | `src/datos/marca-agua.json` |
 | Planes y formulario de anunciantes | `src/pages/anunciate.astro` |
 | Kit para anunciantes: cifras, paquetes y precios (página `/anunciantes/`) | `src/datos/kit.json` |
 | Analítica (visitas y clics) | `src/datos/sitio.json` → `analitica.goatcounter` |
