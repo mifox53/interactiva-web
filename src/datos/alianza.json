@@ -1,0 +1,23 @@
+{
+  "_ayuda": "Renglón 'Alianza iNformativa de NotiNteractiva' que sale debajo de las noticias (portada y /noticias/). El botón lleva al Instagram de NotiNteractiva. Cada aliado sale en el orden de la lista; 'enlace' es a dónde lleva su nombre (vacío = sin enlace); 'discreto': true lo muestra pequeño, sin destacar. Para agregar otro aliado, copiar un bloque en 'aliados'. 'activo': false lo saca sin borrarlo. Si no queda ningún aliado activo, el renglón no se muestra.",
+  "titulo": "Alianza iNformativa de NotiNteractiva",
+  "instagram": "notinteractiva",
+  "aliados": [
+    {
+      "nombre": "Solo Éxitos",
+      "conductor": "Braulio Morales",
+      "dias": "Lunes a viernes",
+      "enlace": "https://www.instagram.com/p/C1kSJL9ulrs/",
+      "discreto": false,
+      "activo": true
+    },
+    {
+      "nombre": "El Tiempo 24",
+      "conductor": "",
+      "dias": "",
+      "enlace": "https://www.eltiempo24.com/",
+      "discreto": true,
+      "activo": true
+    }
+  ]
+}

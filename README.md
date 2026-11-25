@@ -12,6 +12,7 @@ para cambiar algo casi siempre se toca **un solo archivo pequeño**.
 | Patrocinantes: agregar, quitar, rotar, fechas, espacio que ocupan | `src/datos/patrocinantes.json` |
 | Programación | `src/datos/programacion.json` |
 | Noticias | un archivo `.md` por noticia en `src/contenido/noticias/` |
+| Alianza iNformativa de NotiNteractiva (podcasts aliados, debajo de las noticias) | `src/datos/alianza.json` |
 | Artistas | un archivo `.md` por artista en `src/contenido/artistas/` (ver sección Artistas) |
 | Artista de la semana | `src/datos/artista-semana.json` |
 | Eventos y saludos | un archivo `.md` por evento en `src/contenido/eventos/` |
