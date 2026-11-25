@@ -1,0 +1,11 @@
+{
+  "_ayuda": "Marca de agua del fondo de la portada (arriba, detrás del título). 'imagen' es el dibujo de fondo. 'foto' es una foto de persona que sale suave al lado (va en public/img/marca-agua/, con permiso de la persona); vacía = no sale. 'nombre' y 'pie' son el letrero que acompaña la foto. 'desde' / 'hasta' (formato 2026-12-31): sale solo en esas fechas; vacío = sin límite. 'activo': false la quita.",
+  "activo": true,
+  "motivo": "Venezuela en el Miss Universo 2026",
+  "imagen": "/img/marca-agua/corona-venezuela.svg",
+  "foto": "",
+  "nombre": "Barbie Abreu",
+  "pie": "Imagen de",
+  "desde": "",
+  "hasta": "2026-12-07"
+}

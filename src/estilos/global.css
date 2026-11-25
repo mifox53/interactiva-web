@@ -44,6 +44,7 @@ header{position:sticky;top:0;z-index:40;background:rgba(10,11,30,.85);backdrop-f
   radial-gradient(45% 55% at 100% 95%,rgba(25,224,230,.28),transparent 70%),
   radial-gradient(50% 60% at 0% 100%,rgba(255,95,210,.2),transparent 70%)}
 .hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:center}
+.hero-txt{position:relative}
 h1{font-size:clamp(2.4rem,5.6vw,4.5rem);font-weight:800;font-style:italic;line-height:1;letter-spacing:-.03em;text-wrap:balance;margin-top:14px}
 h1 em{font-style:italic;color:var(--cyan)}
 .hero p.sub{margin-top:20px;font-size:clamp(1.05rem,1.8vw,1.3rem);color:#dcdefa}

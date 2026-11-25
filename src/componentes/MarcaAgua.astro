@@ -1,0 +1,37 @@
+---
+// Marca de agua de la portada: un dibujo suave detrás del título y, si hay, una foto de persona
+// al lado con su letrero. Todo se cambia en src/datos/marca-agua.json.
+//   <MarcaAgua />      el fondo (dibujo y foto)
+//   <MarcaAgua pie />  el letrero con el nombre de la persona, debajo de los botones
+import ma from '../datos/marca-agua.json';
+import sitio from '../datos/sitio.json';
+
+const { pie = false } = Astro.props;
+const ver = ma.activo !== false && (ma.imagen || ma.foto);
+---
+{ver && !pie && (
+  <div class:list={['ma', { 'con-foto': ma.foto }]} data-desde={ma.desde || undefined} data-hasta={ma.hasta || undefined} aria-hidden="true">
+    {ma.imagen && <img class="ma-dibujo" src={ma.imagen} alt="" />}
+    {ma.foto && <img class="ma-foto" src={ma.foto} alt="" />}
+  </div>
+)}
+{ver && pie && ma.foto && ma.nombre && (
+  <p class="ma-pie" data-desde={ma.desde || undefined} data-hasta={ma.hasta || undefined}>
+    <span aria-hidden="true">👑</span> <strong>{ma.nombre}</strong> · {ma.pie} {sitio.nombre}
+  </p>
+)}
+
+<style>
+  .ma{position:absolute;inset:-56px -30px -40px -80px;z-index:-1;pointer-events:none}
+  .ma-dibujo{position:absolute;left:55%;top:48%;width:min(500px,95vw);transform:translate(-50%,-50%) rotate(-6deg);opacity:.085}
+  .ma-foto{position:absolute;left:0;bottom:0;height:100%;width:62%;object-fit:cover;object-position:top center;opacity:.32;
+    -webkit-mask-image:radial-gradient(70% 75% at 45% 40%,#000 45%,transparent 100%);mask-image:radial-gradient(70% 75% at 45% 40%,#000 45%,transparent 100%)}
+  .ma.con-foto .ma-dibujo{left:72%;width:min(400px,80vw);opacity:.1}
+  .ma-pie{display:inline-flex;align-items:center;gap:6px;margin-top:18px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(10,11,30,.55);font-size:.8rem;color:var(--mut)}
+  .ma-pie strong{color:var(--txt)}
+  @media (max-width:980px){
+    .ma{inset:-34px -20px -16px -20px}
+    .ma-dibujo,.ma.con-foto .ma-dibujo{left:auto;right:-50px;width:340px;transform:translateY(-50%) rotate(-6deg)}
+    .ma-foto{width:75%}
+  }
+</style>
